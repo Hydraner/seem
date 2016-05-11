@@ -1,0 +1,6 @@
+type: module
+name: Seem
+description: A drupalway sitebuilding suite.
+core: 8.x
+project: seem
+version: VERSION
