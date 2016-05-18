@@ -4,7 +4,6 @@
  * @file
  * Contains hook implementations and functions for the seem module.
  */
-use Drupal\layout_plugin\Layout;
 
 /**
  * Implements hook_entity_view_alter().
@@ -36,19 +35,27 @@ function seem_theme($existing, $type, $theme, $path) {
  */
 function seem_preprocess_seem_wrapper(&$variables) {
 //  $layout_plugin_manager = Layout::layoutPluginManager();
-//  $debug = 1;
+  $plugin_manager = \Drupal::service('plugin.manager.seem_layout_plugin');
+  $debug = 1;
 
   if (isset($variables['content']['#node'])) {
-    $debug = 1;
     $context = $variables['content'];
     $variables['content'] = array();
-    $variables['content']['region_1']['#theme_wrappers'][] = 'region';
-    $variables['content']['region_1']['#region'] = 'region_1';
-    $variables['content']['region_1']['random'] = $context;
 
-    $variables['content']['sidebar']['#theme_wrappers'][] = 'region';
-    $variables['content']['sidebar']['#region'] = 'sidebar';
-    $variables['content']['sidebar']['random']['#markup'] = 'Ich bin eine Sidebar';
+    foreach ($plugin_manager->getDefinitions() as $region => $definition) {
+      $debug = 1;
+      $id = $definition['id'];
+      $variables['content'][$region]['#theme_wrappers'][] = 'region';
+      $variables['content'][$region]['#region'] = $id;
+      foreach ($definition['content'] as $content) {
+        if ($content['type'] == 'context') {
+          $variables['content'][$region]['context'] = $context;
+        }
+        else if ($content['type'] == 'markup') {
+          $variables['content'][$region]['random']['#markup'] = $content['markup'];
+        }
+      }
+    }
   }
   else {
     $variables['content'] = $variables['content']['#children'];

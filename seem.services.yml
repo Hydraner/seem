@@ -1,0 +1,4 @@
+services:
+  plugin.manager.seem_layout_plugin:
+    class: Drupal\seem\SeemLayoutPluginManager
+    arguments: ['@module_handler', '@cache.discovery']
