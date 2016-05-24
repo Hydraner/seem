@@ -9,55 +9,39 @@
  * Implements hook_entity_view_alter().
  */
 function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
-  $build['#theme_wrappers'][] = 'seem_wrapper';
+  if (!isset($build['#rendered'])) {
+    $context = $build;
+    $build = array(
+      'content' => array(
+        '#type' => 'seem',
+        '#element_type' => 'entity',
+        '#context' => $context,
+        '#entity_type' => $entity->getEntityTypeId(),
+        '#bundle' => $display->getTargetBundle(),
+        '#view_mode' => $display->getMode()
+      )
+    );
+  }
 }
 
 /**
- * Implements hook_theme().
+ * Implements hook_entity_view_alter().
  */
-function seem_theme($existing, $type, $theme, $path) {
-  return array(
-    'seem_wrapper' => array(
-      'render element' => 'content',
-      'template' => 'layout/seem-wrapper',
-      'children' => array(),
-    ),
-    'layout' => array(
-      'render element' => 'region',
-      'template' => 'layout/layout',
-      'regions' => array(),
-    ),
-  );
+function seem_form_alter(&$form, $form_state) {
+  $form['#post_render'][] = 'seem_post_render';
 }
 
-/**
- * Implementation of template_preprocess_seem_wrapper().
- */
-function seem_preprocess_seem_wrapper(&$variables) {
-//  $layout_plugin_manager = Layout::layoutPluginManager();
-  $plugin_manager = \Drupal::service('plugin.manager.seem_layout_plugin');
-  $debug = 1;
-
-  if (isset($variables['content']['#node'])) {
-    $context = $variables['content'];
-    $variables['content'] = array();
-
-    foreach ($plugin_manager->getDefinitions() as $region => $definition) {
-      $debug = 1;
-      $id = $definition['id'];
-      $variables['content'][$region]['#theme_wrappers'][] = 'region';
-      $variables['content'][$region]['#region'] = $id;
-      foreach ($definition['content'] as $content) {
-        if ($content['type'] == 'context') {
-          $variables['content'][$region]['context'] = $context;
-        }
-        else if ($content['type'] == 'markup') {
-          $variables['content'][$region]['random']['#markup'] = $content['markup'];
-        }
-      }
-    }
-  }
-  else {
-    $variables['content'] = $variables['content']['#children'];
+function seem_post_render($markup, $element) {
+  if (!isset($element['#rendered'])) {
+    $output = array(
+      'content' => array(
+        '#type' => 'seem',
+        '#element_type' => 'form',
+        '#context' => array('#markup' => $markup)
+      )
+    );
+    // @todo: Find a better solution for that.
+    return \Drupal::service('renderer')->render($output, FALSE);
   }
 }
+

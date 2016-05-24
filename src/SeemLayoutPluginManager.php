@@ -5,9 +5,10 @@ namespace Drupal\seem;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use Drupal\seem\Plugin\Discovery\SuggestionYamlDiscovery;
 
 /**
  * Provides the default seem_layout_plugin manager.
@@ -23,7 +24,8 @@ class SeemLayoutPluginManager extends DefaultPluginManager implements SeemLayout
     // Add required and optional plugin properties.
     'id' => '',
     'label' => '',
-    'content' => array(),
+    'path' => '',
+    'regions' => array(),
   );
 
   /**
@@ -34,9 +36,10 @@ class SeemLayoutPluginManager extends DefaultPluginManager implements SeemLayout
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
+  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend) {
     // Add more services as required.
     $this->moduleHandler = $module_handler;
+    $this->themeHandler = $theme_handler;
     $this->setCacheBackend($cache_backend, 'seem_layout_plugin', array('seem_layout_plugin'));
   }
 
@@ -45,8 +48,18 @@ class SeemLayoutPluginManager extends DefaultPluginManager implements SeemLayout
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $this->discovery = new YamlDiscovery('seem.layout.plugin', $this->moduleHandler->getModuleDirectories());
-      $this->discovery->addTranslatableProperty('label', 'label_context');
+      $directories = array_merge($this->moduleHandler->getModuleDirectories(), $this->themeHandler->getThemeDirectories());
+     
+      $plugin_manager = \Drupal::service('plugin.manager.seem_element_type_plugin.processor');
+      $suggestions = array();
+      foreach ($plugin_manager->getDefinitions() as $plugin_id => $definition) {
+        $suggestions += $plugin_manager->createInstance($plugin_id)->getSuggestions();
+      }
+      $debug = 1;
+      // @todo: Build own Discovery to discover plugins by theme_hook_suggestion.
+      $this->discovery = new SuggestionYamlDiscovery($directories, 'seem.layout.plugin');
+
+//      $this->discovery->addTranslatableProperty('label', 'label_context');
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     }
     return $this->discovery;
