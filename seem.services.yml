@@ -2,8 +2,8 @@ services:
   plugin.manager.seem_layout_plugin:
     class: Drupal\seem\SeemLayoutPluginManager
     arguments: ['@module_handler', '@theme_handler', '@cache.discovery']
-  plugin.manager.seem_element_type_plugin.processor:
-    class: Drupal\seem\Plugin\SeemElementTypePluginManager
+  plugin.manager.layoutable.processor:
+    class: Drupal\seem\LayoutableManager
     parent: default_plugin_manager
   seem.route_subscriber:
     class: Drupal\seem\Routing\RouteSubscriber

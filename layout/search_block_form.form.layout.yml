@@ -1,0 +1,13 @@
+id: searchform
+label: 'Searchform'
+regions:
+  first:
+    -
+      type: markup
+      markup: 'Hier kommt das form'
+    -
+      type: context
+  second:
+      -
+        type: markup
+        markup: 'Ende Form'

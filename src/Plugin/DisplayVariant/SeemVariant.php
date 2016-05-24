@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @todo A better description here.
  *
  * @DisplayVariant(
- *   id = "seem",
+ *   id = "seem_variant",
  *   admin_label = @Translation("Seem"),
  *   no_ui = TRUE,
  * )

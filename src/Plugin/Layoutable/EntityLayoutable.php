@@ -1,22 +1,23 @@
 <?php
 
-namespace Drupal\seem\Plugin\SeemElementTypePlugin;
+namespace Drupal\seem\Plugin\Layoutable;
 
 use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\seem\Plugin\SeemElementTypePluginBase;
+use Drupal\seem\LayoutableBase;
+use Drupal\seem\LayoutableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @todo A better description here.
  *
- * @SeemElementTypePlugin(
+ * @Layoutable(
  *   id = "entity",
  *   label = @Translation("Entity")
  * )
  */
-class EntityElementType extends SeemElementTypePluginBase implements ContainerFactoryPluginInterface {
+class EntityLayoutable extends LayoutableBase implements ContainerFactoryPluginInterface {
 
   protected $entityDisplayRepository;
   protected $entityTypeBundleInfo;

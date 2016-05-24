@@ -7,6 +7,8 @@
 
 /**
  * Implements hook_entity_view_alter().
+ *
+ * Wraps any entity with the seem render element to make it layoutable.
  */
 function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if (!isset($build['#rendered'])) {
@@ -14,8 +16,8 @@ function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterfac
     $build = array(
       'content' => array(
         '#type' => 'seem',
-        '#element_type' => 'entity',
-        '#context' => $context,
+        '#layoutable' => 'entity',
+        '#main_content' => $context,
         '#entity_type' => $entity->getEntityTypeId(),
         '#bundle' => $display->getTargetBundle(),
         '#view_mode' => $display->getMode()
@@ -26,18 +28,34 @@ function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterfac
 
 /**
  * Implements hook_entity_view_alter().
+ *
+ * Add a post_render callback to any form, in order to wrap the rendered form
+ * with a layout.
  */
 function seem_form_alter(&$form, $form_state) {
   $form['#post_render'][] = 'seem_post_render';
 }
 
+/**
+ * Implementation of seem_post_render().
+ *
+ * Wrap the rendered form with the seem render element to make it layoutable.
+ *
+ * @param $markup
+ *    The markup passed by post_render. We use it as main_content.
+ * @param $element
+ *    The original render array to extract some context.
+ * @return string
+ *    Returns the rendered layout / new markup.
+ */
 function seem_post_render($markup, $element) {
   if (!isset($element['#rendered'])) {
     $output = array(
       'content' => array(
         '#type' => 'seem',
-        '#element_type' => 'form',
-        '#context' => array('#markup' => $markup)
+        '#layoutable' => 'form',
+        '#form_id' => $element['#form_id'],
+        '#main_content' => array('#markup' => $markup)
       )
     );
     // @todo: Find a better solution for that.

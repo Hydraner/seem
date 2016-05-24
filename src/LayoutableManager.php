@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\seem\Plugin;
+namespace Drupal\seem;
 
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -9,11 +9,10 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides the Seem element type plugin plugin manager.
  */
-class SeemElementTypePluginManager extends DefaultPluginManager {
-
+class LayoutableManager extends DefaultPluginManager {
 
   /**
-   * Constructor for SeemElementTypePluginManager objects.
+   * Constructor for LayoutableManager objects.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -24,10 +23,10 @@ class SeemElementTypePluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/SeemElementTypePlugin', $namespaces, $module_handler, 'Drupal\seem\Plugin\SeemElementTypePluginInterface', 'Drupal\seem\Annotation\SeemElementTypePlugin');
+    parent::__construct('Plugin/Layoutable', $namespaces, $module_handler, 'Drupal\seem\LayoutableInterface', 'Drupal\seem\Annotation\Layoutable');
 
-    $this->alterInfo('seem_seem_element_type_plugin_info');
-    $this->setCacheBackend($cache_backend, 'seem_seem_element_type_plugin_plugins');
+    $this->alterInfo('seem_layoutable_info');
+    $this->setCacheBackend($cache_backend, 'seem_layoutable_plugins');
   }
 
 }

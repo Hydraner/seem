@@ -25,7 +25,7 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
     $configuration = $event->getPluginConfiguration();
     $configuration['original_display_variant_plugin_id'] = $event->getPluginId();
     $event->setPluginConfiguration($configuration);
-    $event->setPluginId('seem');
+    $event->setPluginId('seem_variant');
   }
 
   /**

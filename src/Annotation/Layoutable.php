@@ -7,12 +7,12 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Seem element type plugin item annotation object.
  *
- * @see \Drupal\seem\Plugin\SeemElementTypePluginManager
+ * @see \Drupal\seem\Plugin\LayoutableManager
  * @see plugin_api
  *
  * @Annotation
  */
-class SeemElementTypePlugin extends Plugin {
+class Layoutable extends Plugin {
 
 
   /**

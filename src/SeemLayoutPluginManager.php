@@ -50,11 +50,11 @@ class SeemLayoutPluginManager extends DefaultPluginManager implements SeemLayout
     if (!isset($this->discovery)) {
       $directories = array_merge($this->moduleHandler->getModuleDirectories(), $this->themeHandler->getThemeDirectories());
      
-      $plugin_manager = \Drupal::service('plugin.manager.seem_element_type_plugin.processor');
-      $suggestions = array();
-      foreach ($plugin_manager->getDefinitions() as $plugin_id => $definition) {
-        $suggestions += $plugin_manager->createInstance($plugin_id)->getSuggestions();
-      }
+//      $plugin_manager = \Drupal::service('plugin.manager.layoutable.processor');
+//      $suggestions = array();
+//      foreach ($plugin_manager->getDefinitions() as $plugin_id => $definition) {
+//        $suggestions += $plugin_manager->createInstance($plugin_id)->getSuggestions();
+//      }
       $debug = 1;
       // @todo: Build own Discovery to discover plugins by theme_hook_suggestion.
       $this->discovery = new SuggestionYamlDiscovery($directories, 'seem.layout.plugin');
