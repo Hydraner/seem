@@ -1,6 +1,5 @@
 # Example seem_layout_plugin plugin definitions.
 # Plugin property $defaults are defined in SeemLayoutPluginManager.
-id: one
 label: 'One'
 regions:
   first:

@@ -28,12 +28,4 @@ class SeemLayoutable extends Plugin {
    * @ingroup plugin_translatable
    */
   public $label;
-
-  /**
-   * @inheritdoc
-   */
-  public function __construct($values) {
-    // @todo: Set id from name.
-    parent::__construct($values);
-  }
 }
