@@ -51,15 +51,17 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
    */
   protected $title = '';
   protected $pageVariant;
+  protected $seemRenderableManager;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $blockPluginManager, VariantManager $display_variant) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $blockPluginManager, VariantManager $display_variant, PluginManagerInterface $seem_renderable_manager) {
     $this->blockPluginManager = $blockPluginManager;
     $this->displayVariantPluginManager = $display_variant;
+    $this->seemRenderableManager = $seem_renderable_manager;
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
   /**
@@ -71,7 +73,8 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
       $plugin_id,
       $plugin_definition,
       $container->get('plugin.manager.block'),
-      $container->get('plugin.manager.display_variant')
+      $container->get('plugin.manager.display_variant'),
+      $container->get('plugin.manager.seem_renderable.processor')
     );
   }
 
@@ -84,7 +87,7 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
    * {@inheritdoc}
    */
   public function build() {
-    $plugin_manager = \Drupal::service('plugin.manager.seem_layout_plugin');
+    $plugin_manager = \Drupal::service('plugin.manager.seem_display');
     // Iterate through all available layouts.
     // @todo: Identify the layout by it's context.
     // @todo: Use the context as id for layouts.
@@ -93,14 +96,10 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
       if ($definition['context'] == $this->configuration['suggestion']) {
         foreach ($definition['regions'] as $region => $region_content) {
           foreach ($region_content as $content) {
-            // @todo: introduce SeemRenderType plugin.
-            if ($content['type'] == 'context') {
-              $this->appendRenderArray($region, $this->mainContent);
-            }
-            else {
-              if ($content['type'] == 'markup') {
-                $this->appendRenderArray($region, ['#markup' => $content['markup']]);
-              }
+            if ($this->seemRenderableManager->hasDefinition($content['type'])) {
+              $seem_renderable = $this->seemRenderableManager->createInstance($content['type']);
+              $renderable = $seem_renderable->doRenderable($content, $this);
+              $this->appendRenderArray($region, $renderable);
             }
           }
         }
@@ -177,6 +176,10 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
   public function setMainContent(array $main_content) {
     $this->mainContent = $main_content;
     return $this;
+  }
+
+  public function getMainContent() {
+    return $this->mainContent;
   }
 
   /**

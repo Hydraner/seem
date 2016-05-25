@@ -66,7 +66,7 @@ class SuggestionYamlDiscovery extends YamlDirectoryDiscovery {
       foreach ($directories as $directory) {
         // Make the discovery search in /layout directory.
         // @todo: Maybe we should do this already in the PluginManager.
-        $directory = $directory . '/layout';
+        $directory = $directory . '/display';
         if (is_dir($directory)) {
           /** @var \SplFileInfo $fileInfo */
           foreach ($this->getDirectoryIterator($directory) as $fileInfo) {

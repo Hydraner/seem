@@ -1,16 +1,19 @@
 services:
-  plugin.manager.seem_layout_plugin:
-    class: Drupal\seem\SeemLayoutPluginManager
-    arguments: ['@module_handler', '@theme_handler', '@cache.discovery']
-  plugin.manager.layoutable.processor:
-    class: Drupal\seem\LayoutableManager
+  plugin.manager.seem_layoutable.processor:
+    class: Drupal\seem\Plugin\SeemLayoutableManager
     parent: default_plugin_manager
   seem.route_subscriber:
     class: Drupal\seem\Routing\RouteSubscriber
-    arguments: ['@plugin.manager.seem_layout_plugin']
+    arguments: ['@plugin.manager.seem_display']
     tags:
       - { name: 'event_subscriber' }
   seem.display_variant_subscriber:
     class: Drupal\seem\EventSubscriber\SeemDisplayVariantSubscriber
     tags:
       - { name: event_subscriber }
+  plugin.manager.seem_renderable.processor:
+    class: Drupal\seem\Plugin\SeemRenderableManager
+    parent: default_plugin_manager
+  plugin.manager.seem_display:
+    class: Drupal\seem\SeemDisplayManager
+    arguments: ['@module_handler', '@theme_handler', '@cache.discovery']

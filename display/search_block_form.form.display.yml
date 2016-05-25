@@ -6,7 +6,7 @@ regions:
       type: markup
       markup: 'Hier kommt das form'
     -
-      type: context
+      type: main_content
   second:
       -
         type: markup

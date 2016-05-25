@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains the Seem render element implementation.
- */
-
 namespace Drupal\seem\Element;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
@@ -22,11 +17,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Seem extends RenderElement implements ContainerFactoryPluginInterface {
 
   /**
-   * The Layoutable manager.
+   * The SeemLayoutable manager.
    *
-   * @var \Drupal\seem\LayoutableManager
+   * @var \Drupal\seem\Plugin\SeemLayoutableManager
    */
-  protected $layoutableManager;
+  protected $seemLayoutableManager;
+
+  /**
+   * The SeemRenderable plugin manager.
+   *
+   * @var \Drupal\seem\Plugin\SeemRenderableManager
+   */
+  protected $seemRenderableManager;
 
   /**
    * The variant manager.
@@ -51,15 +53,18 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $layoutable_manager
-   *   The layoutable plugin manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $seem_layoutable_manager
+   *   The SeemLayoutable plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $variant_manager
    *   The variant manager.Variant $display_variant_manager.
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The Plugin Block Manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $seem_renderable_manager
+   *   The seem renderable plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $layoutable_manager, PluginManagerInterface $variant_manager, BlockManagerInterface $block_manager) {
-    $this->layoutableManager = $layoutable_manager;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $seem_layoutable_manager, PluginManagerInterface $seem_renderable_manager, PluginManagerInterface $variant_manager, BlockManagerInterface $block_manager) {
+    $this->seemLayoutableManager = $seem_layoutable_manager;
+    $this->seemRenderableManager = $seem_renderable_manager;
     $this->variantManager = $variant_manager;
     $this->blockManager = $block_manager;
 
@@ -86,7 +91,8 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.layoutable.processor'),
+      $container->get('plugin.manager.seem_layoutable.processor'),
+      $container->get('plugin.manager.seem_renderable.processor'),
       $container->get('plugin.manager.display_variant'),
       $container->get('plugin.manager.block')
     );
@@ -107,16 +113,18 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
    * Implements preRenderSeemElement().
    */
   public function preRenderSeemElement($element) {
-    if ($this->layoutableManager->hasDefinition($element['#layoutable'])) {
+    // Check whether the content has already been rendered by seem and if there
+    // it is layoutable which knows how.
+    if (!isset($element['#main_content']['#rendered']) && $this->seemLayoutableManager->hasDefinition($element['#layoutable'])) {
       // Make sure the content won't get rendered recursive.
       $element['#main_content']['#rendered'] = TRUE;
 
-      /** @var \Drupal\seem\LayoutableInterface $element_type */
-      $element_type = $this->layoutableManager->createInstance($element['#layoutable']);
+      /** @var \Drupal\seem\Plugin\SeemLayoutableInterface $element_type */
+      $element_type = $this->seemLayoutableManager->createInstance($element['#layoutable']);
       $configuration['suggestion'] = $element_type->getPattern($element);
 
       /** @var \Drupal\seem\Plugin\DisplayVariant\SeemVariant $seem_variant */
-      $seem_variant = new SeemVariant($configuration, 'seem', $this->variantManager->getDefinition('seem_variant'), $this->blockManager, $this->variantManager);
+      $seem_variant = new SeemVariant($configuration, 'seem', $this->variantManager->getDefinition('seem_variant'), $this->blockManager, $this->variantManager, $this->seemRenderableManager);
 
       // Call Drupal\Core\Display\PageVariantInterface methods.
       $seem_variant->setMainContent($element['#main_content']);

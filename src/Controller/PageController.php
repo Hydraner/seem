@@ -4,10 +4,8 @@ namespace Drupal\seem\Controller;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\seem\Plugin\DisplayVariant\SeemVariant;
+use Drupal\seem\SeemDisplayManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\seem\SeemLayoutPluginManager;
 
 /**
  * Class PageController.
@@ -20,13 +18,13 @@ class PageController extends ControllerBase {
   /**
    * Drupal\seem\SeemLayoutPluginManager definition.
    *
-   * @var \Drupal\seem\SeemLayoutPluginManager
+   * @var \Drupal\seem\SeemDisplayManager
    */
   protected $plugin_manager_seem_layout_plugin;
   /**
    * {@inheritdoc}
    */
-  public function __construct(SeemLayoutPluginManager $plugin_manager_seem_layout_plugin) {
+  public function __construct(SeemDisplayManager $plugin_manager_seem_layout_plugin) {
     $this->plugin_manager_seem_layout_plugin = $plugin_manager_seem_layout_plugin;
   }
 
@@ -35,7 +33,7 @@ class PageController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.seem_layout_plugin')
+      $container->get('plugin.manager.seem_display')
     );
   }
 

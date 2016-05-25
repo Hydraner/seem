@@ -11,19 +11,17 @@
  * Wraps any entity with the seem render element to make it layoutable.
  */
 function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
-  if (!isset($build['#rendered'])) {
-    $context = $build;
-    $build = array(
-      'content' => array(
-        '#type' => 'seem',
-        '#layoutable' => 'entity',
-        '#main_content' => $context,
-        '#entity_type' => $entity->getEntityTypeId(),
-        '#bundle' => $display->getTargetBundle(),
-        '#view_mode' => $display->getMode()
-      )
-    );
-  }
+  $main_content = $build;
+  $build = array(
+    'content' => array(
+      '#type' => 'seem',
+      '#layoutable' => 'entity',
+      '#main_content' => $main_content,
+      '#entity_type' => $entity->getEntityTypeId(),
+      '#bundle' => $display->getTargetBundle(),
+      '#view_mode' => $display->getMode()
+    )
+  );
 }
 
 /**
@@ -49,17 +47,12 @@ function seem_form_alter(&$form, $form_state) {
  *    Returns the rendered layout / new markup.
  */
 function seem_post_render($markup, $element) {
-  if (!isset($element['#rendered'])) {
-    $output = array(
-      'content' => array(
-        '#type' => 'seem',
-        '#layoutable' => 'form',
-        '#form_id' => $element['#form_id'],
-        '#main_content' => array('#markup' => $markup)
-      )
-    );
-    // @todo: Find a better solution for that.
-    return \Drupal::service('renderer')->render($output, FALSE);
-  }
+  $output = array(
+    '#type' => 'seem',
+    '#layoutable' => 'form',
+    '#form_id' => $element['#form_id'],
+    '#main_content' => array('#markup' => $markup)
+  );
+  // @todo: Find a better solution for that.
+  return \Drupal::service('renderer')->render($output, FALSE);
 }
-

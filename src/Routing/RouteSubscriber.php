@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * ...
- */
 
 namespace Drupal\seem\Routing;
 
@@ -13,6 +9,9 @@ use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Defines a route subscriber, listening.
+ */
 class RouteSubscriber extends RouteSubscriberBase {
   protected $pluginManager;
 
@@ -29,44 +28,11 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   public function alterRoutes(RouteCollection $collection) {
     $debug = 1;
+    // @todo: Extend plugin manager to return definitions by SeemRenderable (in
+    // this case we need "page").
     foreach ($this->pluginManager->getDefinitions() as $definition) {
       $path = $definition['path'];
       if ($route_name = $this->findRouteName($path, $collection)) {
-//        // Route exists.
-//        $debug = 1;
-//        /** @var \Symfony\Component\Routing\Route $collection_route */
-//        $collection_route = $collection->get($route_name);
-//        $path = $collection_route->getPath();
-//        $parameters = $collection_route->getOption('parameters') ?: [];
-////        $requirements['_custom_access'] = '\Drupal\seem\Controller\PageController::access';
-//        $collection_route->setDefault('_controller', '\Drupal\seem\Controller\PageController::view');
-//        $requirements = $collection_route->getRequirements();
-////        unset($requirements['_entity_access']);
-////        $requirements['_custom_access'] = '\Drupal\seem\Controller\PageController::access';
-//        $collection_route->setRequirements($requirements);
-////        $collection->remove($route_name);
-////
-////
-////        $route = new Route(
-////          $path,
-////          [
-////            '_controller' => '\Drupal\seem\Controller\PageController::view',
-////            '_title' => $definition['label'],
-//////          'page_manager_page_variant' => $variant_id,
-//////          'page_manager_page' => $page_id,
-//////          'page_manager_page_variant_weight' => $variant->getWeight(),
-////            // When adding multiple variants, the variant ID is added to the
-////            // route name. In order to convey the base route name for this set
-////            // of variants, add it as a parameter.
-////            'base_route_name' => $route_name,
-////          ],
-////          $requirements,
-////          [
-////            'parameters' => $parameters,
-//////          '_admin_route' => $entity->usesAdminTheme(),
-////          ]
-////        );
-////        $collection->add($route_name, $route);
       }
       else {
         // We need to create the route.

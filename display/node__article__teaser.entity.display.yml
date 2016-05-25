@@ -1,15 +1,15 @@
 # Example seem_layout_plugin plugin definitions.
 # Plugin property $defaults are defined in SeemLayoutPluginManager.
-id: one
-label: 'One'
+id: two
+label: 'Two'
 regions:
   first:
     -
       type: markup
-      markup: 'Ich bin Markup über dem Content'
+      markup: 'ASDASDIch bin Markup über dem Content'
     -
-      type: context
+      type: main_content
   second:
       -
         type: markup
-        markup: 'Ich bin eine Sidebar, Frei definiertes Markup über das yaml'
+        markup: 'ASDASDIch bin eine Sidebar, Frei definiertes Markup über das yaml'

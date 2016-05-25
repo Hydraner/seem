@@ -5,15 +5,13 @@ namespace Drupal\seem\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Seem element type plugin item annotation object.
+ * Defines a Plugin annotation object for seen's layoutable plugins.
  *
- * @see \Drupal\seem\Plugin\LayoutableManager
- * @see plugin_api
+ * @see \Drupal\seem\Plugin\SeemLayoutableManager
  *
  * @Annotation
  */
-class Layoutable extends Plugin {
-
+class SeemLayoutable extends Plugin {
 
   /**
    * The plugin ID.
@@ -31,4 +29,11 @@ class Layoutable extends Plugin {
    */
   public $label;
 
+  /**
+   * @inheritdoc
+   */
+  public function __construct($values) {
+    // @todo: Set id from name.
+    parent::__construct($values);
+  }
 }

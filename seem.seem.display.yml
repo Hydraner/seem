@@ -1,0 +1,8 @@
+# Example seem_display plugin definitions.
+# Plugin property $defaults are defined in SeemDisplayManager.
+first:
+  id: one
+  label: One
+second:
+  id: two
+  label: Two

@@ -1,23 +1,22 @@
 <?php
 
-namespace Drupal\seem\Plugin\Layoutable;
+namespace Drupal\seem\Plugin\SeemLayoutable;
 
 use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\seem\LayoutableBase;
-use Drupal\seem\LayoutableInterface;
+use Drupal\seem\Plugin\SeemLayoutableBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @todo A better description here.
  *
- * @Layoutable(
+ * @SeemLayoutable(
  *   id = "entity",
  *   label = @Translation("Entity")
  * )
  */
-class EntityLayoutable extends LayoutableBase implements ContainerFactoryPluginInterface {
+class EntitySeemLayoutable extends SeemLayoutableBase implements ContainerFactoryPluginInterface {
 
   protected $entityDisplayRepository;
   protected $entityTypeBundleInfo;
@@ -68,7 +67,10 @@ class EntityLayoutable extends LayoutableBase implements ContainerFactoryPluginI
     return $suggestions;
   }
 
-  function getPattern($element) {
+  /**
+   * {@inheritdoc}
+   */
+  public function getPattern($element) {
     return $element['#entity_type'] . '__' . $element['#bundle'] . '__' . $element['#view_mode'];
   }
 }
