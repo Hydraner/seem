@@ -10,7 +10,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
 use Drupal\seem\Plugin\SeemLayoutableManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the default seem_display manager.
@@ -70,24 +69,17 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     if (!isset($this->discovery)) {
       $directories = array_merge($this->moduleHandler->getModuleDirectories(), $this->themeHandler->getThemeDirectories());
 
-//      $plugin_manager = \Drupal::service('plugin.manager.layoutable.processor');
-//      $suggestions = array();
-//      foreach ($plugin_manager->getDefinitions() as $plugin_id => $definition) {
-//        $suggestions += $plugin_manager->createInstance($plugin_id)->getSuggestions();
-//      }
-      $debug = 1;
-
+      // Make the discovery search in /layout directory.
       foreach ($directories as &$directory) {
-        // Make the discovery search in /layout directory.
         $directory = $directory . '/display';
       }
-      // @todo: Build own Discovery to discover plugins by theme_hook_suggestion.
-      // Since we extract the id from the file_name, we use the label as $key.
-      $this->discovery = new YamlDirectoryDiscovery($directories, 'seem.display.plugin', 'label');
 
-//      $this->discovery->addTranslatableProperty('label', 'label_context');
+      // Since we extract the id from the file_name, we use the 'label' as $key.
+      $this->discovery = new YamlDirectoryDiscovery($directories, 'seem.display.plugin', 'label');
+      $this->discovery->addTranslatableProperty('label', 'label_context');
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     }
+
     return $this->discovery;
   }
 
@@ -102,20 +94,9 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     $definition['id'] = $basename_fragments[0];
     $definition['seem_layoutable'] = $basename_fragments[1];
 
-
-    $plugin_id = $definition['id'];
-
     // @todo: Add the possibility to validate the id per seem_layoutable.
     if (!$this->seemLayoutablePluginManager->hasDefinition($definition['seem_layoutable'])) {
       throw new PluginException(sprintf('Seem layoutable "%s" does not exist (defined in %s).', $definition['seem_layoutable'], $definition['_discovered_file_path']));
     }
-
-    // You can add validation of the plugin definition here.
-//    if (empty($definition['id'])) {
-//      throw new PluginException(sprintf('Example plugin property (%s) definition "is" is required.', $plugin_id));
-//    }
   }
-
-  // Add other methods here as defined in the SeemDisplayManagerInterface.
-
 }

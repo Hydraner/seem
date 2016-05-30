@@ -38,10 +38,18 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onSelectPageDisplayVariant(PageDisplayVariantSelectionEvent $event) {
-    // Inject the original display variant plugin id to the seem variant display.
+    // Inject the original display variant plugin id to the seem variant
+    // display. Since we only want to take control over the main_content part
+    // of the page, we will inject the matching seem layout into the original
+    // display variant.
     $configuration = array_merge($event->getPluginConfiguration(), ['original_display_variant_plugin_id' => $event->getPluginId()]);
     $event->setPluginConfiguration($configuration);
-    // @todo: Think about using diffrent variants for diffrent usecases (http response for instance).
+    /** 
+     * @todo: Think about using diffrent variants for diffrent usecases 
+     *        (http response for instance). This would mean that we already need 
+     *        to make decisions at this point and inject the configuration
+     *        instead of doing this in the build() method.
+     */
     $event->setPluginId('seem_variant');
   }
 
