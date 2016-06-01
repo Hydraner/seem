@@ -10,5 +10,4 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 interface SeemDisplayManagerInterface extends PluginManagerInterface {
 
     // Add getters and other public methods for seem_display managers.
-
 }

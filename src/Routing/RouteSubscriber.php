@@ -30,7 +30,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     $debug = 1;
     // @todo: Extend plugin manager to return definitions by SeemRenderable (in
     // this case we need "page").
-    foreach ($this->pluginManager->getDefinitions() as $definition) {
+    foreach ($this->pluginManager->getDefinitionsBySeemLayoutable('page') as $definition) {
       $path = $definition['path'];
       if ($route_name = $this->findRouteName($path, $collection)) {
       }

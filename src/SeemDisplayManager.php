@@ -3,6 +3,7 @@
 namespace Drupal\seem;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -43,6 +44,21 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
   protected $themeHandler;
 
   /**
+   * Cached definitions array, keyed by seem_layoutbale.
+   *
+   * @var array
+   */
+  protected $definitionsBySeemLayoutable;
+
+  /**
+   * An alternative cache key which we use to cache Definitions, keyed by
+   * seem_layoutable.
+   *
+   * @var string
+   */
+  protected $cacheKeyBySeemLayoutable;
+
+  /**
    * Constructs a SeemDisplayManager object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -58,9 +74,19 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
     $this->seemLayoutablePluginManager = $seem_layoutable_plugin_manager;
-    $this->setCacheBackend($cache_backend, 'seem_display', array('seem_display'));
+    $this->setCacheBackend($cache_backend, 'seem_display', array('seem_display'), 'seem_display:by_seem_layoutable');
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * @param string
+   *   Custom cache_key for plugin definitions keyed by seem_layoutable.
+   */
+  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = array(), $cache_key_seem_layoutable) {
+    parent::setCacheBackend($cache_backend, $cache_key, $cache_tags);
+    $this->cacheKeyBySeemLayoutable = $cache_key_seem_layoutable;
+  }
 
   /**
    * {@inheritdoc}
@@ -99,4 +125,55 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
       throw new PluginException(sprintf('Seem layoutable "%s" does not exist (defined in %s).', $definition['seem_layoutable'], $definition['_discovered_file_path']));
     }
   }
+
+  /**
+   * Returns plugin definitions of the decorated discovery class, grouped by a
+   * given seem_layoutable plugin_id.
+   *
+   * @param $seem_layoutable_plugin_id
+   *   The seem_layoutable plugin id.
+   * @return array|null
+   *   An array of plugin definitions.
+   */
+  public function getDefinitionsBySeemLayoutable($seem_layoutable_plugin_id) {
+    $definitions_by_seem_layoutable = $this->getCachedDefinitionsBySeemLayoutable($seem_layoutable_plugin_id);
+    if (!isset($definitions_by_seem_layoutable)) {
+      $definitions = $this->getDefinitions();
+      $definitions_by_seem_layoutable = [];
+      foreach ($definitions as $plugin_id => $plugin_definition) {
+        $definitions_by_seem_layoutable[$plugin_definition['seem_layoutable']][$plugin_definition['id']] = $plugin_definition;
+      }
+      $this->setCachedDefinitionsBySeemLayoutable($definitions_by_seem_layoutable);
+    }
+    return $definitions_by_seem_layoutable;
+  }
+
+  /**
+   * Returns the cached plugin definitions of the decorated discovery class,
+   * grouped by seem_layoutable plugin_id.
+   *
+   * @param $seem_layoutable_plugin_id
+   *   The seem_layoutable plugin id.
+   * @return array|null
+   *   On success this will return an array of plugin definitions.
+   */
+  protected function getCachedDefinitionsBySeemLayoutable($seem_layoutable_plugin_id) {
+    if (!isset($this->definitionsBySeemLayoutable) && $cache = $this->cacheGet($this->cacheKeyBySeemLayoutable)) {
+      $this->definitionsBySeemLayoutable = $cache->data;
+    }
+    return $this->definitionsBySeemLayoutable[$seem_layoutable_plugin_id];
+  }
+
+  /**
+   * Sets a cache of plugin definitions for the decorated discovery class,
+   * grouped by seem_layoutable plugin_id.
+   *
+   * @param array $definitions_by_seem_layoutable
+   *   List of definitions to store in cache.
+   */
+  protected function setCachedDefinitionsBySeemLayoutable($definitions_by_seem_layoutable) {
+    $this->cacheSet($this->cacheKeyBySeemLayoutable, $definitions_by_seem_layoutable, Cache::PERMANENT, $this->cacheTags);
+    $this->definitionsBySeemLayoutable = $definitions_by_seem_layoutable;
+  }
+
 }

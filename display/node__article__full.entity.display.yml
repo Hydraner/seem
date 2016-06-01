@@ -7,6 +7,9 @@ regions:
       type: markup
       markup: 'Ich bin Markup über dem Content'
     -
+      type: content_block
+      bid: 1
+    -
       type: main_content
   second:
       -

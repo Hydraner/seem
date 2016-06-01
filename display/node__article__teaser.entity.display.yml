@@ -8,6 +8,9 @@ regions:
       markup: 'ASDASDIch bin Markup über dem Content'
     -
       type: main_content
+    -
+      type: content_block
+      bid: 1
   second:
       -
         type: markup

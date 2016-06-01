@@ -5,6 +5,9 @@ regions:
       type: markup
       markup: 'Hier kommt das form'
     -
+      type: content_block
+      bid: 1
+    -
       type: main_content
   second:
       -

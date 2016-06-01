@@ -136,9 +136,11 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
       /** @var \Drupal\seem\Plugin\SeemLayoutableInterface $element_type */
       $element_type = $this->seemLayoutablePluginManager->createInstance($element['#layoutable']);
       $configuration['suggestion'] = $element_type->getPattern($element);
+      $configuration['seem_layoutable'] = $element_type->getPluginId();
 
       /** @var \Drupal\seem\Plugin\DisplayVariant\SeemVariant $seem_variant */
       $seem_variant = new SeemVariant($configuration, 'seem', $this->variantPluginManager->getDefinition('seem_variant'), $this->blockPluginManager, $this->variantPluginManager, $this->seemRenderablePluginManager, $this->seemDisplayPluginManager);
+      $seem_variant->setSeemLayoutable($element_type);
 
       // Call Drupal\Core\Display\PageVariantInterface methods.
       $seem_variant->setMainContent($element['#main_content']);

@@ -79,6 +79,9 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
    */
   protected $pageVariant;
 
+
+  protected $seemLayoutable;
+
   /**
    * Constructs a new SeemVariant object.
    *
@@ -146,15 +149,20 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
     // Iterate through all available layouts.
     // @todo: Identify the layout by it's context.
     // @todo: Use the context as id for layouts.
+    $test = $this->seemDisplayPluginManager->getDefinitionsBySeemLayoutable('entity');
+    $test2 = $this->seemDisplayPluginManager->getDefinitionsBySeemLayoutable('form');
+    $debug = 1;
     foreach ($this->seemDisplayPluginManager->getDefinitions() as $key => $definition) {
       // If the layout matches our suggestion, extract the regions.
-      if ($definition['id'] == $this->configuration['suggestion']) {
-        foreach ($definition['regions'] as $region => $region_content) {
-          foreach ($region_content as $content) {
-            if ($this->seemRenderablePluginManager->hasDefinition($content['type'])) {
-              $seem_renderable = $this->seemRenderablePluginManager->createInstance($content['type']);
-              $renderable = $seem_renderable->doRenderable($content, $this);
-              $this->addToRegion($region, $renderable);
+      if (isset($this->configuration['suggestion'])) {
+        if ($definition['id'] == $this->configuration['suggestion']) {
+          foreach ($definition['regions'] as $region => $region_content) {
+            foreach ($region_content as $content) {
+              if ($this->seemRenderablePluginManager->hasDefinition($content['type'])) {
+                $seem_renderable = $this->seemRenderablePluginManager->createInstance($content['type']);
+                $renderable = $seem_renderable->doRenderable($content, $this);
+                $this->addToRegion($region, $renderable);
+              }
             }
           }
         }
@@ -253,6 +261,10 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
    */
   public function setTitle($title) {
     $this->title = $title;
+    return $this;
+  }
+  public function setSeemLayoutable($seem_layoutable) {
+    $this->seemLayoutable = $seem_layoutable;
     return $this;
   }
 }

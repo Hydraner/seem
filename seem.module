@@ -13,6 +13,8 @@
 function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   $main_content = $build;
   $build = array(
+    '#' . $entity->getEntityTypeId() => $entity,
+    '#entity_type' => $entity->getEntityTypeId(),
     'content' => array(
       '#type' => 'seem',
       '#layoutable' => 'entity',
