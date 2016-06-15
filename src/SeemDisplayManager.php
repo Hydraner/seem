@@ -83,7 +83,7 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
    * @param string
    *   Custom cache_key for plugin definitions keyed by seem_layoutable.
    */
-  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = array(), $cache_key_seem_layoutable) {
+  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = array(), $cache_key_seem_layoutable = NULL) {
     parent::setCacheBackend($cache_backend, $cache_key, $cache_tags);
     $this->cacheKeyBySeemLayoutable = $cache_key_seem_layoutable;
   }
@@ -93,6 +93,7 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
+      // Define themes as additional plugin source.
       $directories = array_merge($this->moduleHandler->getModuleDirectories(), $this->themeHandler->getThemeDirectories());
 
       // Make the discovery search in /layout directory.
@@ -107,6 +108,17 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     }
 
     return $this->discovery;
+  }
+
+  /**
+   * Determines if the provider of a definition exists. Since we support themes
+   * and modules as a provider, we need to check both sources.
+   *
+   * @return bool
+   *   TRUE if provider exists, FALSE otherwise.
+   */
+  protected function providerExists($provider) {
+    return $this->moduleHandler->moduleExists($provider) || $this->themeHandler->themeExists($provider);
   }
 
   /**
