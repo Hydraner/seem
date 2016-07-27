@@ -1,0 +1,32 @@
+# Example seem_layout_plugin plugin definitions.
+# Plugin property $defaults are defined in SeemLayoutPluginManager.
+label: "Dafuq"
+#path: '/test'
+# Optionally define the route name that should be registered.
+# route: 'test'
+context:
+  path: '/test'
+# @todo:
+existing_regions:
+  sidebar_first:
+    -
+      type: markup
+      markup: 'FOO BAR JUNGE SIDEBAR FIRST'
+    -
+      type: content_block
+      bid: 1
+    -
+      type: hide
+      key: bartik_tools
+  header:
+    -
+      type: markup
+      markup: 'FOO BAR JUNGE'
+regions:
+  first:
+    -
+      type: markup
+      markup: "Dies ist eine Test Landingpage"
+    -
+      type: content_block
+      bid: 1

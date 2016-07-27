@@ -1,0 +1,4 @@
+seem.contextual_links:
+  deriver: 'Drupal\seem\Plugin\Derivative\SeemContextualLinks'
+  route_name: entity.node.edit_form
+  weight: 100

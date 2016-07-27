@@ -2,7 +2,8 @@
 
 namespace Drupal\seem\Plugin\SeemRenderable;
 
-use Drupal\seem\Plugin\DisplayVariant\SeemVariant;
+use Drupal\seem\Annotation\SeemDisplay;
+use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 
 /**
@@ -18,7 +19,7 @@ class MainContentSeemRenderable extends SeemRenderableBase {
   /**
    * {@inheritdoc}
    */
-  public function doRenderable($content, SeemVariant $seem_variant) {
-    return $seem_variant->getMainContent();
+  public function doRenderable($content, SeemDisplayInterface $seem_display) {
+    return $seem_display->getMainContent();
   }
 }

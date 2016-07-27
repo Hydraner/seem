@@ -1,0 +1,23 @@
+# Example seem_layout_plugin plugin definitions.
+# Plugin property $defaults are defined in SeemLayoutPluginManager.
+label: 'One2'
+class: '\Drupal\seem_example\Plugin\SeemDisplay\SeemDisplayNodeArticleFullDisplay'
+context:
+  entity_type: 'node'
+  bundle: 'article'
+  view_mode: 'full'
+regions:
+  first:
+    -
+      type: main_content
+    -
+      type: markup
+      markup: "Hier kann ich jetzt direkt markup definieren, ist vielleicht nicht so schön aber es ist ja auch nur eine DEMO."
+  second:
+    -
+      type: content_block
+      bid: 1
+    -
+      type: view
+      name: who_s_new
+      display_id: block_1

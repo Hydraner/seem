@@ -1,6 +1,6 @@
 services:
-  plugin.manager.seem_layoutable.processor:
-    class: Drupal\seem\Plugin\SeemLayoutableManager
+  plugin.manager.seem_displayable.processor:
+    class: Drupal\seem\Plugin\SeemDisplayableManager
     parent: default_plugin_manager
   seem.route_subscriber:
     class: Drupal\seem\Routing\RouteSubscriber
@@ -17,4 +17,4 @@ services:
     parent: default_plugin_manager
   plugin.manager.seem_display:
     class: Drupal\seem\SeemDisplayManager
-    arguments: ['@module_handler', '@theme_handler', '@cache.discovery', '@plugin.manager.seem_layoutable.processor']
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@theme_handler', '@plugin.manager.seem_displayable.processor']

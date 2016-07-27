@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -13,6 +14,9 @@ use Symfony\Component\Routing\RouteCollection;
  * Defines a route subscriber, listening.
  */
 class RouteSubscriber extends RouteSubscriberBase {
+
+  use StringTranslationTrait;
+
   protected $pluginManager;
 
   /**
@@ -27,18 +31,12 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   public function alterRoutes(RouteCollection $collection) {
-    $debug = 1;
-    // @todo: Extend plugin manager to return definitions by SeemRenderable (in
-    // this case we need "page").
-    foreach ($this->pluginManager->getDefinitionsBySeemLayoutable('page') as $definition) {
+    foreach ($this->pluginManager->getDefinitionsBySeemDisplayable('page') as $definition) {
       $path = $definition['path'];
-      if ($route_name = $this->findRouteName($path, $collection)) {
-      }
-      else {
+      if (!$this->findRouteName($path, $collection)) {
         // We need to create the route.
         $debug = 1;
-        $route_name = "seem.layout_" . $definition['id'];
-        $path = $definition['path'];
+//        $route_name = "seem.layout_" . $definition['id'];
         $requirements = array();
         $parameters = array();
         $requirements['_custom_access'] = '\Drupal\seem\Controller\PageController::access';
@@ -46,15 +44,18 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           $path,
           [
-            '_controller' => '\Drupal\seem\Controller\PageController::content',
-            '_title' => $definition['label'],
+            '_controller' => '\Drupal\seem\Controller\PageController::view',
+            '_title' => (string) $definition['label'],
 //          'page_manager_page_variant' => $variant_id,
 //          'page_manager_page' => $page_id,
 //          'page_manager_page_variant_weight' => $variant->getWeight(),
             // When adding multiple variants, the variant ID is added to the
             // route name. In order to convey the base route name for this set
             // of variants, add it as a parameter.
-            'base_route_name' => $route_name,
+            'base_route_name' => $definition['context']['route'],
+            // @todo: I think we don't need this anymore since we use the route as context.
+//            'plugin_id' => $definition['id'],
+            'seem_display' => $definition
           ],
           $requirements,
           [
@@ -62,9 +63,55 @@ class RouteSubscriber extends RouteSubscriberBase {
 //          '_admin_route' => $entity->usesAdminTheme(),
           ]
         );
-        $collection->add($route_name, $route);
+        $collection->add($definition['context']['route'], $route);
       }
 
+    }
+
+
+    // Route overrides.
+    foreach ($this->pluginManager->getDefinitionsBySeemDisplayable('existing_page') as $definition) {
+      if (isset($definition['response']) && $route = $collection->get($definition['context']['route'])) {
+        if ($definition['response'] == 404) {
+          $route->setDefaults([
+            '_controller' => '\Drupal\system\Controller\Http4xxController:on404',
+            '_title' => 'Page not found',
+          ]);
+          $route->setRequirement('_access', 'TRUE');
+        }
+        else if ($definition['response'] == 403) {
+          $route->setDefaults([
+            '_controller' => '\Drupal\system\Controller\Http4xxController:on403',
+            '_title' => 'Access denied',
+          ]);
+          $route->setRequirement('_access', 'TRUE');
+        }
+        else if ($definition['response'] == 401) {
+          $route->setDefaults([
+            '_controller' => '\Drupal\system\Controller\Http4xxController:on401',
+            '_title' => 'Unauthorized',
+          ]);
+          $route->setRequirement('_access', 'TRUE');
+        }
+      }
+
+      if (isset($definition['route']) && $route_overrides = $definition['route']) {
+        if (isset($definition['context']['route']) && $route = $collection->get($definition['context']['route'])) {
+          foreach ($route_overrides as $key => $values) {
+            $method_key = ucfirst($key);
+            if (method_exists($route, "get$method_key")) {
+//              if (!empty($route->{"get$method_key"}())) {
+              $route->{"add$method_key"}($values);
+//              }
+//              else {
+//                $route->{"set$method_key"}($values);
+//              }
+//              $debug = 1;
+            }
+          }
+        }
+//        $route->set
+      }
     }
   }
 

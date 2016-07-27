@@ -2,7 +2,9 @@
 
 namespace Drupal\seem\Plugin\SeemRenderable;
 
-use Drupal\seem\Plugin\DisplayVariant\SeemVariant;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\seem\Annotation\SeemDisplay;
+use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 
 /**
@@ -18,7 +20,9 @@ class MarkupSeemRenderable extends SeemRenderableBase {
   /**
    * {@inheritdoc}
    */
-  public function doRenderable($content, SeemVariant $seem_variant) {
-    return ['#markup' => $content['markup']];
+  public function doRenderable($content, SeemDisplayInterface $seem_display) {
+    $markup = new TranslatableMarkup($content['markup']);
+    return ['#markup' => $markup];
   }
+  
 }

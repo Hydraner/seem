@@ -1,22 +1,22 @@
 <?php
 
-namespace Drupal\seem\Plugin\SeemLayoutable;
+namespace Drupal\seem\Plugin\SeemDisplayable;
 
 use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\seem\Plugin\SeemLayoutableBase;
+use Drupal\seem\Plugin\SeemDisplayableBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @todo A better description here.
  *
- * @SeemLayoutable(
+ * @SeemDisplayable(
  *   id = "entity",
  *   label = @Translation("Entity")
  * )
  */
-class EntitySeemLayoutable extends SeemLayoutableBase implements ContainerFactoryPluginInterface {
+class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFactoryPluginInterface {
 
   protected $entityDisplayRepository;
   protected $entityTypeBundleInfo;
@@ -70,7 +70,26 @@ class EntitySeemLayoutable extends SeemLayoutableBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
+  public function getContext($element) {
+    return [
+      'entity_type' => $element['#entity_type'],
+      'bundle' => $element['#bundle'],
+      'view_mode' => $element['#view_mode']
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPattern($element) {
     return $element['#entity_type'] . '__' . $element['#bundle'] . '__' . $element['#view_mode'];
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function determineActiveDisplayable($definitions) {
+    return isset($definitions[$this->getPattern($this->configuration['element'])]) ? $definitions[$this->getPattern($this->configuration['element'])] : NULL;
+  }
+  
 }

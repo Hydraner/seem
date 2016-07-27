@@ -2,7 +2,8 @@
 
 namespace Drupal\seem\Plugin\SeemRenderable;
 
-use Drupal\seem\Plugin\DisplayVariant\SeemVariant;
+use Drupal\seem\Annotation\SeemDisplay;
+use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 use Drupal\views\Views;
 
@@ -19,10 +20,10 @@ class ViewSeemRenderable extends SeemRenderableBase {
   /**
    * {@inheritdoc}
    */
-  public function doRenderable($content, SeemVariant $seem_variant) {
-    $view = Views::getView($content['view']);
+  public function doRenderable($content, SeemDisplayInterface $seem_display) {
+    $view = Views::getView($content['name']);
     if (!$view || !$view->access($content['display_id'])) {
-      return;
+      return [];
     }
 
     return [
@@ -35,4 +36,5 @@ class ViewSeemRenderable extends SeemRenderableBase {
       '#arguments' => isset($content['arguments']) ? $content['arguments'] : [],
     ];
   }
+  
 }

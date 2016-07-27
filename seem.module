@@ -8,7 +8,7 @@
 /**
  * Implements hook_entity_view_alter().
  *
- * Wraps any entity with the seem render element to make it layoutable.
+ * Wraps any entity with the seem render element to make it displaybale.
  */
 function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   $main_content = $build;
@@ -17,7 +17,7 @@ function seem_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterfac
     '#entity_type' => $entity->getEntityTypeId(),
     'content' => array(
       '#type' => 'seem',
-      '#layoutable' => 'entity',
+      '#displayable' => 'entity',
       '#main_content' => $main_content,
       '#entity_type' => $entity->getEntityTypeId(),
       '#bundle' => $display->getTargetBundle(),
@@ -39,7 +39,7 @@ function seem_form_alter(&$form, $form_state) {
 /**
  * Implementation of seem_post_render().
  *
- * Wrap the rendered form with the seem render element to make it layoutable.
+ * Wrap the rendered form with the seem render element to make it displaybale.
  *
  * @param $markup
  *    The markup passed by post_render. We use it as main_content.
@@ -51,7 +51,7 @@ function seem_form_alter(&$form, $form_state) {
 function seem_post_render($markup, $element) {
   $output = array(
     '#type' => 'seem',
-    '#layoutable' => 'form',
+    '#displayable' => 'form',
     '#form_id' => $element['#form_id'],
     '#main_content' => array('#markup' => $markup)
   );

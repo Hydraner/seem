@@ -1,0 +1,16 @@
+# Example seem_layout_plugin plugin definitions.
+# Plugin property $defaults are defined in SeemLayoutPluginManager.
+label: "Kontakt"
+path: '/contact/feedback'
+context:
+  route: 'entity.contact_form.canonical'
+regions:
+  first:
+    -
+      type: markup
+      markup: "Dies ist eine Test EXISTING PAGE"
+    -
+      type: main_content
+    -
+      type: content_block
+      bid: 1

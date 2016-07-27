@@ -1,0 +1,10 @@
+label: 'Searchform'
+context:
+  form_id: 'search_block_form'
+regions:
+  first:
+    -
+      type: markup
+      markup: "<h2>Search here BLABLA</h2>"
+    -
+      type: main_content

@@ -43,14 +43,44 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
     // of the page, we will inject the matching seem layout into the original
     // display variant.
     $configuration = array_merge($event->getPluginConfiguration(), ['original_display_variant_plugin_id' => $event->getPluginId()]);
-    $event->setPluginConfiguration($configuration);
-    /** 
-     * @todo: Think about using diffrent variants for diffrent usecases 
-     *        (http response for instance). This would mean that we already need 
-     *        to make decisions at this point and inject the configuration
-     *        instead of doing this in the build() method.
-     */
-    $event->setPluginId('seem_variant');
+    
+    // If we have a seem_display on the route, we can be sure it's cause we
+    // registered the route ourselves.
+    if (null !== $event->getRouteMatch()->getParameter('seem_display')) {
+      // @todo: Replace suggestion with file_name or ID?
+      $configuration['suggestion'] = $event->getRouteMatch()->getParameter('plugin_id');
+      $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();
+      $configuration['seem_displayable'] = 'page';
+      $configuration['seem_display'] = $event->getRouteMatch()->getParameter('seem_display');
+
+      $event->setPluginConfiguration($configuration);
+      $event->setPluginId('seem_variant');
+      
+      $debug = 1;
+    }
+    else {
+
+      $context = ['route' => $event->getRouteMatch()->getRouteName()];
+      $seem_display = $this->seemDisplayPluginManager->getDefinitionByContext($context, 'existing_page');
+
+      if ($seem_display) {
+        // @todo: Replace suggestion with file_name or ID?
+        $configuration['suggestion'] = $event->getRouteMatch()->getRouteName();
+        $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();
+        $configuration['seem_displayable'] = 'existing_page';
+        $configuration['seem_display'] = $seem_display;
+
+        $event->setPluginConfiguration($configuration);
+        $event->setPluginId('seem_variant');
+      }
+      else {
+        // We can assume that their is no existing page context. So what about
+        // the other contexts.
+      }
+
+
+    }
+
   }
 
   /**

@@ -4,3 +4,4 @@ description: A drupalway sitebuilding suite.
 core: 8.x
 project: seem
 version: VERSION
+package: Seem

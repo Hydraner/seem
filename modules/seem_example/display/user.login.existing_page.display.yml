@@ -1,0 +1,22 @@
+# Example seem_layout_plugin plugin definitions.
+# Plugin property $defaults are defined in SeemLayoutPluginManager.
+label: "Kontakt"
+#path: '/contact/feedback'
+context:
+  route: 'entity.user.canonical'
+# @route overdies
+#route:
+#  defaults:
+#    _title: 'MUH SAGT DIE KUH'
+#    _title_callback: NULL
+response: 404
+#regions:
+#  first:
+#    -
+#      type: markup
+#      markup: "<h1>LOGINy</h1>"
+#    -
+#      type: main_content
+#    -
+#      type: content_block
+#      bid: 1

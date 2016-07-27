@@ -1,0 +1,7 @@
+name: Seem example displays
+type: module
+description: 'Registers a few example displays to use for testing or demonstration.'
+core: 8.x
+package: Seem
+dependencies:
+  - seem
