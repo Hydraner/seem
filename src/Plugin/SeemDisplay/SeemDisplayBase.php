@@ -142,6 +142,14 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 //    if ($library = $this->getLibrary()) {
 //      $build['#attached']['library'][] = $library;
 //    }
+
+    $seem_displayable = \Drupal::getContainer()
+      ->get('plugin.manager.seem_displayable.processor')
+      ->createInstance($build['#display']['seem_displayable']);
+
+
+//    $seem_displayable_base_path = $seem_displayable->getBasePath($this->getContext());
+
     return $build;
   }
 

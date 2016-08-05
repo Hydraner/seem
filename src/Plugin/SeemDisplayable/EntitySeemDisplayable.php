@@ -20,10 +20,13 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
 
   protected $entityDisplayRepository;
   protected $entityTypeBundleInfo;
+  protected $entityTypeManager;
+  protected $context;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityDisplayRepository $entity_display_repository, EntityTypeBundleInfo $entity_type_bundle_info) {
     $this->entityDisplayRepository = $entity_display_repository;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->entityTypeManager = \Drupal::entityTypeManager();
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -53,6 +56,60 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
     );
   }
 
+  public function getContextualLinksGroup() {
+    return $this->context['entity_type'];
+  }
+
+  public function getBasePaths($context = []) {
+    $path = '';
+    $debug = 1;
+
+    $paths = [];
+    foreach ($this->entityDisplayRepository->getAllViewmodes() as $entity_type_id => $view_modes) {
+      $entity_type_definition = $this->entityTypeManager->getDefinition($entity_type_id);
+      if ($entity_type_definition->hasLinkTemplate('canonical')) {
+        $paths[] = $entity_type_definition->getLinkTemplate('canonical');
+      }
+    }
+
+    return $paths;
+
+
+    if ($entity_type_definition->hasLinkTemplate('canonical')) {
+      return $entity_type_definition->getLinkTemplate('canonical');
+    }
+
+    return NULL;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContext($element) {
+    $this->context = [
+      'entity_type' => $element['#entity_type'],
+      'bundle' => $element['#bundle'],
+      'view_mode' => $element['#view_mode']
+    ];
+
+    return $this->context;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPattern($element) {
+    return $element['#entity_type'] . '__' . $element['#bundle'] . '__' . $element['#view_mode'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function determineActiveDisplayable($definitions) {
+    return isset($definitions[$this->getPattern($this->configuration['element'])]) ? $definitions[$this->getPattern($this->configuration['element'])] : NULL;
+  }
+
   function getSuggestions() {
     $suggestions = [];
 
@@ -66,30 +123,4 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
 
     return $suggestions;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContext($element) {
-    return [
-      'entity_type' => $element['#entity_type'],
-      'bundle' => $element['#bundle'],
-      'view_mode' => $element['#view_mode']
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPattern($element) {
-    return $element['#entity_type'] . '__' . $element['#bundle'] . '__' . $element['#view_mode'];
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function determineActiveDisplayable($definitions) {
-    return isset($definitions[$this->getPattern($this->configuration['element'])]) ? $definitions[$this->getPattern($this->configuration['element'])] : NULL;
-  }
-  
 }

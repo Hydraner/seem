@@ -18,13 +18,15 @@ class RouteSubscriber extends RouteSubscriberBase {
   use StringTranslationTrait;
 
   protected $pluginManager;
+  protected $seemDisplayable;
 
   /**
    * RouteSubscriber constructor.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
    */
-  public function __construct(PluginManagerInterface $plugin_manager) {
+  public function __construct(PluginManagerInterface $plugin_manager, $seem_displayable) {
     $this->pluginManager = $plugin_manager;
+    $this->seemDisplayable = $seem_displayable;
   }
 
   /**
@@ -112,6 +114,14 @@ class RouteSubscriber extends RouteSubscriberBase {
         }
 //        $route->set
       }
+    }
+
+    // @todo: Build routes for displayable configuration forms.
+    foreach ($this->seemDisplayable->getDefinitions() as $definition) {
+      $displayable = $this->seemDisplayable->createInstance($definition['id']);
+      $paths = $displayable->getBasePaths();
+      // @todo: Generate the route for the Paths.
+      $debug = 1;
     }
   }
 

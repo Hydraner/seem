@@ -15,4 +15,8 @@ abstract class SeemDisplayableBase extends PluginBase implements SeemDisplayable
   public function getSuggestion() {
     return isset($this->configuration['suggestion']) ? $this->configuration['suggestion'] : NULL;
   }
+
+  public function getBasePaths() {
+    return [];
+  }
 }

@@ -8,7 +8,9 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides dynamic contextual links for configuration translation.
+ * The idea is, to have contextual links on all the displayables which have or
+ * may not have displays attached to it. This way we could provide a flexible
+ * way to configure the displays from the UI in-place.
  */
 class SeemContextualLinks extends DeriverBase implements ContainerDeriverInterface {
 
@@ -73,6 +75,8 @@ class SeemContextualLinks extends DeriverBase implements ContainerDeriverInterfa
       $this->derivatives[$route_name]['route_name'] = $route_name;
       $this->derivatives[$route_name]['group'] = $group_name;
 //    }
+    // @todo: Generate route based on parameters defined in Displaybaöe
+    // @todo: Generate contextual link based on generated route pattern.
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }
 
