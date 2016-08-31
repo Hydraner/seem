@@ -1,0 +1,6 @@
+entity.seem_display.add_form:
+  route_name: 'entity.seem_display.add_form'
+  title: 'Add Seem display'
+  appears_on:
+    - entity.seem_display.collection
+

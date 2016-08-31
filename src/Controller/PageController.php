@@ -35,5 +35,9 @@ class PageController extends ControllerBase {
     // parameters from the route and/or request as needed.
     return AccessResult::allowed();
   }
-  
+
+  public function viewSeemDisplayConfig() {
+    return ['#markup' => 'ES GEHT! zumindest für entities'];
+  }
+
 }

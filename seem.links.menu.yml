@@ -1,0 +1,8 @@
+# Seem display menu items definition
+entity.seem_display.collection:
+  title: 'Seem display'
+  route_name: entity.seem_display.collection
+  description: 'List Seem display (bundles)'
+  parent: system.admin_structure
+  weight: 99
+

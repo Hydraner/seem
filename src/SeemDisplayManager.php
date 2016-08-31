@@ -10,8 +10,6 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
-use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\seem\Plugin\Discovery\YamlDirectoryDiscoveryDecorator;
 use Drupal\seem\Plugin\SeemDisplayableManager;
 
@@ -175,10 +173,10 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     // Generate a route name if we have a path given and store the path to
     // generate the route in the route subscriber. We only want to use the route
     // as a context.
-    if (isset($definition['context']['path'])) {
+    if (isset($definition['context']['path']) && !isset($definition['context']['route'])) {
       $definition['path'] = $definition['context']['path'];
       unset($definition['context']['path']);
-      $definition['context']['route'] =  "seem.layout_" . $definition['id'];
+      $definition['context']['route'] =  "seem.display_" . $definition['id'];
     }
 
     // @todo: Get context dependencies from seem_displayable.

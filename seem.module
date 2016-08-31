@@ -73,3 +73,19 @@ function seem_preprocess_views_view(&$variables) {
     $variables['title']['#markup'] = $view->getTitle();
   }
 }
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function seem_entity_type_build(array &$entity_types) {
+  $debug = 1;
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+//  $entity_types['seem']
+//    ->setFormClass('add', 'Drupal\seem\SeemDisplayAddForm')
+//    ->setFormClass('edit', 'Drupal\seem\SeemDisplayEditForm')
+//    ->setFormClass('delete', 'Drupal\seem\Form\SeemDisplayDeleteForm')
+//    ->setListBuilderClass('Drupal\seem\SeemListBuilder')
+//    ->setLinkTemplate('delete-form', '/admin/structure/seem/configure/{seem_display_id}/delete')
+//    ->setLinkTemplate('edit-form', '/admin/structure/seem/configure/{seem_display_id}')
+//    ->setLinkTemplate('collection', '/admin/structure/seem');
+}

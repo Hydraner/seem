@@ -1,0 +1,12 @@
+seem.seem_display.*:
+  type: config_entity
+  label: 'Seem display config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
