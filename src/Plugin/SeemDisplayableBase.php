@@ -19,4 +19,12 @@ abstract class SeemDisplayableBase extends PluginBase implements SeemDisplayable
   public function getBasePaths() {
     return [];
   }
+
+  public function getConfigurationFormDefault() {
+    return [
+      'type' => 'text',
+      'title' => 'Submit button value'
+    ];
+  }
+
 }

@@ -21,6 +21,14 @@ class FormSeemDisplayable extends SeemDisplayableBase {
     return ['form_id' => $element['#form_id']];
   }
 
+  // @todo: make this work.
+  public function getConfigContext($element) {
+    return [
+      'form_id' => $element['#form_id'],
+      'route' => ''
+    ];
+  }
+
   /**
    * {@inheritdoc}
    */

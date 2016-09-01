@@ -126,7 +126,6 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   /**
    * {@inheritdoc}
    *
-   * @todo: This MUST be cached.
    */
   public function build() {
     $build = $this->getProcessedRegions();
@@ -149,6 +148,11 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 
 
 //    $seem_displayable_base_path = $seem_displayable->getBasePath($this->getContext());
+
+    // @todo: Add configuration link with context @see https://www.previousnext.com.au/blog/understanding-drupal-8s-modal-api-and-dialog-controller
+    $build['content'][] = [
+      '#markup' => '<a href="#">UGLY Context link</a>'
+    ];
 
     return $build;
   }
@@ -189,6 +193,20 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    * @todo: Add the possiblitly to deactivate the display.
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+
+    // Hirarchy: SeemDisplayBaseDefault -> SeemDisplayableBaseDefault -> SemmDisplayCustomDisplay
+
+
+    // @todo: layout integration.
+//    $form['layout_plugin'] = [
+//
+//    ];
+
+    // @todo: get default config forms form displayables.
+//    foreach ($this->seemDisplayablePluginManager->getDefinitions() as $definition) {
+//      $form += $definition->getConfigurationFormDefault();
+//    }
+
     return $form;
   }
 

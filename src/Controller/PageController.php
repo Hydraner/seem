@@ -4,6 +4,10 @@ namespace Drupal\seem\Controller;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\seem\Annotation\SeemDisplayable;
+use Drupal\seem\Plugin\SeemDisplayableManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class PageController.
@@ -11,6 +15,21 @@ use Drupal\Core\Controller\ControllerBase;
  * @package Drupal\seem\Controller
  */
 class PageController extends ControllerBase {
+
+
+  public function __construct(CurrentRouteMatch $current_route_match, SeemDisplayableManager $seem_displayable) {
+    $this->currentRouteMatch = $current_route_match;
+
+    $this->seemDisplayable = $seem_displayable;
+  }
+
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_route_match'),
+      $container->get('plugin.manager.seem_displayable.processor')
+    );
+  }
 
   /**
    * Since the display is managing the content of landing page, we don't need
@@ -37,7 +56,15 @@ class PageController extends ControllerBase {
   }
 
   public function viewSeemDisplayConfig() {
-    return ['#markup' => 'ES GEHT! zumindest für entities'];
+    $debug = 1;
+    $parameters = $this->currentRouteMatch->getParameters();
+    $seem_displayable_definition = $parameters->get('seem_displayable_definition');
+
+    $displayable = $this->seemDisplayable->createInstance($seem_displayable_definition['id']);
+
+
+    $label = $parameters->get('seem_displayable_definition')['label']->render();
+    return ['#markup' => "Dies ist ein $label"];
   }
 
 }

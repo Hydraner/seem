@@ -96,6 +96,18 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
     return $this->context;
   }
 
+  // @todo: Make this work.
+  public function getConfigContext($element) {
+    $this->context = [
+      'entity_type' => $element['#entity_type'],
+      'bundle' => $element['#bundle'],
+      'view_mode' => $element['#view_mode'],
+      'entity_id' => $element['#entity_id']
+    ];
+
+    return $this->context;
+  }
+
   /**
    * {@inheritdoc}
    */

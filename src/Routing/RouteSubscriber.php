@@ -117,6 +117,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     }
 
     // @todo: Build routes for displayable configuration forms.
+    // @todo: change this admin/structure/seem/seem_displayable_configuration
     foreach ($this->seemDisplayable->getDefinitions() as $definition) {
       $displayable = $this->seemDisplayable->createInstance($definition['id']);
       $paths = $displayable->getBasePaths();

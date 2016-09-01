@@ -72,6 +72,7 @@ class SeemDisplay extends Plugin {
 
   public $seem_displayable;
   public $context;
+  public $config;
 
   /**
    * An associative array of regions in this layout.
