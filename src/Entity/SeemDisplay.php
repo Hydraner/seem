@@ -53,4 +53,15 @@ class SeemDisplay extends ConfigEntityBase implements SeemDisplayInterface {
    */
   protected $label;
 
+  protected $config = [];
+  protected $context = [];
+  protected $plugin;
+  protected $parameters = [];
+
+  public function getParameters() {
+    return $this->parameters;
+  }
+  public function getContext() {
+    return $this->context;
+  }
 }

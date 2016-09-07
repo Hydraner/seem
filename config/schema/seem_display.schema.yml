@@ -10,3 +10,18 @@ seem.seem_display.*:
       label: 'Label'
     uuid:
       type: string
+    plugin:
+      type: string
+    context:
+      type: sequence
+      sequence:
+        - type: string
+    parameters:
+      type: sequence
+      sequence:
+        - type: string
+    config:
+      type: sequence
+      label: 'Config'
+      sequence:
+        - type: string

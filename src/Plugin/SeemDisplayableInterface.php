@@ -9,8 +9,5 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  */
 interface SeemDisplayableInterface extends PluginInspectionInterface {
 
-
-  // Add get/set methods for your plugin type here.
-//  function getSuggestions();
   public function getPattern($element);
 }

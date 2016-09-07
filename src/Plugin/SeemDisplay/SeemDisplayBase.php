@@ -8,9 +8,11 @@
 namespace Drupal\seem\Plugin\SeemDisplay;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a base class for Layout plugins.
@@ -79,14 +81,6 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     return $this->mainContent;
   }
 
-//  public function setProcessedRegions($regions) {
-//    $this->processedRegions = $regions;
-//  }
-
-//  public function getProcessedRegions() {
-//    return $this->processedRegions;
-//  }
-
   // @todo: Move this to seemDisplayBase
   public function getProcessedRegions() {
     $regions = [];
@@ -118,10 +112,6 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 
     return $region;
   }
-//  public function hasContext($context) {
-//    $debug = 1;
-//  }
-
 
   /**
    * {@inheritdoc}
@@ -150,8 +140,57 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 //    $seem_displayable_base_path = $seem_displayable->getBasePath($this->getContext());
 
     // @todo: Add configuration link with context @see https://www.previousnext.com.au/blog/understanding-drupal-8s-modal-api-and-dialog-controller
+
+// Build link for dialog.
+//    $link_url = Url::fromRoute('entity.seem_display.config_form', array(
+
+    // @todo: Get config entity for context. Use parameters and display for context.
+//    $seem_display_entity = entity_load();
+//    $query = \Drupal::entityQuery('seem_display');
+    // @todo: Context per plugin. this just works for entities.
+    $parameters = \Drupal::routeMatch()->getRawParameters()->all();
+    $display = $build['#display'];
+    $query = \Drupal::entityQuery('seem_display');
+    foreach ($parameters as $key => $value) {
+      $query->condition("parameters.$key", $value);
+    }
+    if (empty($parameters)) {
+      $query->condition("parameters", NULL, 'IS NULL');
+    }
+    foreach ($display['context'] as $key => $value) {
+      $query->condition("context.$key", $value);
+    }
+
+    $seem_display_id = $query->execute();
+    $entity_id = !empty($seem_display_id) ? key($query->execute()) : '';
+    if (!empty($entity_id)) {
+      $type = 'edit_form';
+    }
+    else {
+      $type = 'add_form';
+    }
+
+    $link_url = Url::fromRoute('entity.seem_display.' . $type, array(
+        'seem_display' => $entity_id,
+        'parameters' => Json::encode($parameters),
+        'display' => Json::encode(['display' => $display]),
+      )
+    );
+    $link_url->setOptions(array(
+        'attributes' => array(
+          'class' => array('use-ajax'),
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode(array(
+            'width' => 700,
+          )),
+        ))
+    );
+    // Magic link.
+    // @todo: We need better UX for that.
+    $link_add_unit_display_name = \Drupal::l('Create unit display name', $link_url);
+
     $build['content'][] = [
-      '#markup' => '<a href="#">UGLY Context link</a>'
+      '#markup' => $link_add_unit_display_name
     ];
 
     return $build;
@@ -227,6 +266,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    * {@inheritdoc}
    */
   public function getConfiguration() {
+    return $this->configuration;
+    // @todo: Add the possibilty to add defaultConfiguration().
     return array_merge($this->defaultConfiguration(), $this->configuration);
   }
 
@@ -237,15 +278,20 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     $this->configuration = $configuration;
   }
 
-  public function calculateDependencies() {
-    // TODO: Implement calculateDependencies() method.
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
     return [];
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @todo: Think about how to usefully use this.
    */
-  public function defaultConfiguration() {
+  public function calculateDependencies() {
+    // TODO: Implement calculateDependencies() method.
     return [];
   }
 

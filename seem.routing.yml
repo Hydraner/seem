@@ -1,0 +1,7 @@
+entity.seem_display.config_form:
+  path: '/admin/structure/seem/seem_displayable_configuration'
+  defaults:
+    _title: 'Config form'
+    _form: '\Drupal\seem\Form\SeemDisplayForm'
+  requirements:
+    _access: 'TRUE'

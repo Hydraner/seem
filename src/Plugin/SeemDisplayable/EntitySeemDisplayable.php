@@ -4,6 +4,7 @@ namespace Drupal\seem\Plugin\SeemDisplayable;
 
 use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\seem\Plugin\SeemDisplayableBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,33 +57,6 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
     );
   }
 
-  public function getContextualLinksGroup() {
-    return $this->context['entity_type'];
-  }
-
-  public function getBasePaths($context = []) {
-    $path = '';
-    $debug = 1;
-
-    $paths = [];
-    foreach ($this->entityDisplayRepository->getAllViewmodes() as $entity_type_id => $view_modes) {
-      $entity_type_definition = $this->entityTypeManager->getDefinition($entity_type_id);
-      if ($entity_type_definition->hasLinkTemplate('canonical')) {
-        $paths[] = $entity_type_definition->getLinkTemplate('canonical');
-      }
-    }
-
-    return $paths;
-
-
-    if ($entity_type_definition->hasLinkTemplate('canonical')) {
-      return $entity_type_definition->getLinkTemplate('canonical');
-    }
-
-    return NULL;
-  }
-
-
   /**
    * {@inheritdoc}
    */
@@ -96,7 +70,7 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
     return $this->context;
   }
 
-  // @todo: Make this work.
+  // @todo: Make this work. does it?
   public function getConfigContext($element) {
     $this->context = [
       'entity_type' => $element['#entity_type'],
@@ -115,24 +89,4 @@ class EntitySeemDisplayable extends SeemDisplayableBase implements ContainerFact
     return $element['#entity_type'] . '__' . $element['#bundle'] . '__' . $element['#view_mode'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function determineActiveDisplayable($definitions) {
-    return isset($definitions[$this->getPattern($this->configuration['element'])]) ? $definitions[$this->getPattern($this->configuration['element'])] : NULL;
-  }
-
-  function getSuggestions() {
-    $suggestions = [];
-
-    foreach ($this->entityDisplayRepository->getAllViewmodes() as $entity_type_id => $view_modes) {
-      foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type_id) as $bundle_id => $bundle_definition) {
-        foreach ($view_modes as $view_mode => $view_mode_definition) {
-          $suggestions[] = $entity_type_id . '__' . $bundle_id . '__' . $view_mode;
-        }
-      }
-    }
-
-    return $suggestions;
-  }
 }

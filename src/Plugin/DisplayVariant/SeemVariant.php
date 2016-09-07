@@ -6,7 +6,6 @@ use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Display\VariantManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Element;
 use Drupal\seem\SeemDisplayManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

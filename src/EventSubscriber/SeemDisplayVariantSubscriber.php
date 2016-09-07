@@ -46,7 +46,7 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
     
     // If we have a seem_display on the route, we can be sure it's cause we
     // registered the route ourselves.
-    if (null !== $event->getRouteMatch()->getParameter('seem_display')) {
+    if (null !== $event->getRouteMatch()->getParameter('seem_display') && is_array($event->getRouteMatch()->getParameter('seem_display'))) {
       // @todo: Replace suggestion with file_name or ID?
       $configuration['suggestion'] = $event->getRouteMatch()->getParameter('plugin_id');
       $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();

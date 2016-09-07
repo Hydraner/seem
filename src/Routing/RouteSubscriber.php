@@ -116,41 +116,6 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
     }
 
-    // @todo: Build routes for displayable configuration forms.
-    // @todo: change this admin/structure/seem/seem_displayable_configuration
-    foreach ($this->seemDisplayable->getDefinitions() as $definition) {
-      $displayable = $this->seemDisplayable->createInstance($definition['id']);
-      $paths = $displayable->getBasePaths();
-      // @todo: Generate the route for the Paths.
-      $count = 0;
-      foreach ($paths as $delta => $path) {
-        $configuration_path = $path . '/seem';
-
-        // @todo: Create access for seem display config pages.
-        $requirements = [];
-        $requirements['_custom_access'] = '\Drupal\seem\Controller\PageController::access';
-
-        $route = new Route(
-          $configuration_path,
-          [
-            // @todo: Move this to seemDispalyable.
-            '_controller' => '\Drupal\seem\Controller\PageController::viewSeemDisplayConfig',
-            '_title' => (string) $definition['label'],
-            'base_route_name' => 'seem.displayable_config_' . $definition['id'],
-//            'seem_displayable' => $displayable,
-            'seem_displayable_definition' => $definition,
-          ],
-          $requirements,
-          [
-            'parameters' => [],
-            '_admin_route' => TRUE,
-          ]
-        );
-        $collection->add('seem.displayable_config_' . $definition['id'] . '_' . $count, $route);
-        $count++;
-      }
-      $debug = 1;
-    }
   }
 
   protected function findRouteName($path, RouteCollection $collection) {

@@ -21,7 +21,6 @@ class ExistingPageSeemDisplayable extends SeemDisplayableBase {
    * {@inheritdoc}
    */
   public function getPattern($element) {
-    $debug = 1;
     return [];
   }
 
@@ -31,13 +30,6 @@ class ExistingPageSeemDisplayable extends SeemDisplayableBase {
   public function getContext($element) {
     $debug = 1;
     return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function determineActiveDisplayable($definitions) {
-    return isset($definitions[$this->getSuggestion()]) ? $definitions[$this->configuration['suggestion']] : NULL;
   }
   
 }
