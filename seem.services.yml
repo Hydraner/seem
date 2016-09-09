@@ -4,7 +4,7 @@ services:
     parent: default_plugin_manager
   seem.route_subscriber:
     class: Drupal\seem\Routing\RouteSubscriber
-    arguments: ['@plugin.manager.seem_display', '@plugin.manager.seem_displayable.processor']
+    arguments: ['@plugin.manager.seem_display']
     tags:
       - { name: 'event_subscriber' }
   seem.display_variant_subscriber:

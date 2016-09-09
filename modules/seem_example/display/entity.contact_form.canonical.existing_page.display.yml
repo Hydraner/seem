@@ -1,6 +1,6 @@
 # Example seem_layout_plugin plugin definitions.
 # Plugin property $defaults are defined in SeemLayoutPluginManager.
-label: "Kontakt"
+label: "Kontakt form"
 path: '/contact/feedback'
 context:
   route: 'entity.contact_form.canonical'

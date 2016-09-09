@@ -9,5 +9,12 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  */
 interface SeemDisplayableInterface extends PluginInspectionInterface {
 
-  public function getPattern($element);
+  /**
+   * Determines which parameters are context for the selected displayable.
+   *
+   * @param $element
+   * @return mixed
+   */
+  public function getContext($element);
+
 }

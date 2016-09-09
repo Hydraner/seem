@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Url;
+use Drupal\layout_plugin\Layout;
 
 /**
  * Provides a base class for Layout plugins.
@@ -118,7 +119,20 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    *
    */
   public function build() {
-    $build = $this->getProcessedRegions();
+    // @todo: make this more pretty :) But it works!
+    $regions = $this->getProcessedRegions();
+    if (isset($this->pluginDefinition['layout'])) {
+      $layout_plugin_manager = Layout::layoutPluginManager();
+      if ($layout_plugin_manager->hasDefinition($this->pluginDefinition['layout'])) {
+        $layout = $layout_plugin_manager->createInstance($this->pluginDefinition['layout']);
+        $build = $layout->build($regions);
+      }
+    }
+    else {
+      $build = $regions;
+    }
+
+
     // If no region was set, we will render the main content.
     if (empty($build)) {
       $build['content'][] = $this->getMainContent();

@@ -5,7 +5,7 @@ namespace Drupal\seem\Plugin\SeemDisplayable;
 use Drupal\seem\Plugin\SeemDisplayableBase;
 
 /**
- * @todo A better description here.
+ * The seem_displayable plugin type for existing pages.
  *
  * @todo: Add the existing page features to this displayable (@see
  *        RouteSubscriber).
@@ -17,19 +17,4 @@ use Drupal\seem\Plugin\SeemDisplayableBase;
  */
 class ExistingPageSeemDisplayable extends SeemDisplayableBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getPattern($element) {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContext($element) {
-    $debug = 1;
-    return [];
-  }
-  
 }

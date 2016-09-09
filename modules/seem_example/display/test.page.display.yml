@@ -6,7 +6,6 @@ label: "Dafuq"
 # route: 'test'
 context:
   path: '/test'
-# @todo:
 existing_regions:
   sidebar_first:
     -

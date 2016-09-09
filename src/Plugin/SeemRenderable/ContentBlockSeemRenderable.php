@@ -3,7 +3,6 @@
 namespace Drupal\seem\Plugin\SeemRenderable;
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\seem\Annotation\SeemDisplay;
 use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 

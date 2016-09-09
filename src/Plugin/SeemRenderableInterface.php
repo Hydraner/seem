@@ -14,10 +14,12 @@ interface SeemRenderableInterface extends PluginInspectionInterface {
    * Returns a render array.
    *
    * @param $content
+   *   The content which needs to be rendered.
    * @param \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface $seem_display
-   * @param $region_key
-   * @return \mixed[] A render array.
-   * A render array.
+   *   The seem_display definition.
+   * @return array
+   *   A render array.
    */
   public function doRenderable($content, SeemDisplayInterface $seem_display);
+
 }

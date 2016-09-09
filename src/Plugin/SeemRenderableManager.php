@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  */
 class SeemRenderableManager extends DefaultPluginManager {
 
-
   /**
    * Constructor for SeemRenderableManager objects.
    *

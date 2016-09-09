@@ -50,6 +50,7 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
       // @todo: Replace suggestion with file_name or ID?
       $configuration['suggestion'] = $event->getRouteMatch()->getParameter('plugin_id');
       $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();
+      // @todo: Use seemDisplayable to determine context! (like the seem render element does)
       $configuration['seem_displayable'] = 'page';
       $configuration['seem_display'] = $event->getRouteMatch()->getParameter('seem_display');
 

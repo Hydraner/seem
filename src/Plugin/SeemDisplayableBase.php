@@ -12,6 +12,13 @@ use Drupal\Core\Plugin\PluginFormInterface;
 abstract class SeemDisplayableBase extends PluginBase implements SeemDisplayableInterface, PluginFormInterface {
 
   /**
+   * {@inheritdoc}
+   */
+  public function getContext($element) {
+    return [];
+  }
+
+  /**
    * Form constructor.
    *
    * Plugin forms are embedded in other forms. In order to know where the plugin

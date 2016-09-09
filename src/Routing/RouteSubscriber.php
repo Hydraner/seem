@@ -2,11 +2,11 @@
 
 namespace Drupal\seem\Routing;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\seem\SeemDisplayManager;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -17,28 +17,43 @@ class RouteSubscriber extends RouteSubscriberBase {
 
   use StringTranslationTrait;
 
-  protected $pluginManager;
-  protected $seemDisplayable;
+  /**
+   * The seem_display plugin manager.
+   *
+   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   */
+  protected $seemDisplayManager;
 
   /**
    * RouteSubscriber constructor.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
+   *
+   * @param \Drupal\seem\SeemDisplayManager $seem_display_manager
+   *   The seem display plugin manager.
    */
-  public function __construct(PluginManagerInterface $plugin_manager, $seem_displayable) {
-    $this->pluginManager = $plugin_manager;
-    $this->seemDisplayable = $seem_displayable;
+  public function __construct(SeemDisplayManager $seem_display_manager) {
+    $this->seemDisplayManager = $seem_display_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function alterRoutes(RouteCollection $collection) {
-    foreach ($this->pluginManager->getDefinitionsBySeemDisplayable('page') as $definition) {
+    $this->getSeemPageRoutes($collection);
+    $this->getSeemExistingPageRoutes($collection);
+  }
+
+  /**
+   * Collect and create routes from the seem displays for the displayable type
+   * 'page'.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
+   */
+  protected function getSeemPageRoutes(RouteCollection $collection) {
+    foreach ($this->seemDisplayManager->getDefinitionsBySeemDisplayable('page') as $definition) {
       $path = $definition['path'];
       if (!$this->findRouteName($path, $collection)) {
         // We need to create the route.
-        $debug = 1;
-//        $route_name = "seem.layout_" . $definition['id'];
         $requirements = array();
         $parameters = array();
         $requirements['_custom_access'] = '\Drupal\seem\Controller\PageController::access';
@@ -48,31 +63,32 @@ class RouteSubscriber extends RouteSubscriberBase {
           [
             '_controller' => '\Drupal\seem\Controller\PageController::view',
             '_title' => (string) $definition['label'],
-//          'page_manager_page_variant' => $variant_id,
-//          'page_manager_page' => $page_id,
-//          'page_manager_page_variant_weight' => $variant->getWeight(),
-            // When adding multiple variants, the variant ID is added to the
-            // route name. In order to convey the base route name for this set
-            // of variants, add it as a parameter.
+
             'base_route_name' => $definition['context']['route'],
-            // @todo: I think we don't need this anymore since we use the route as context.
-//            'plugin_id' => $definition['id'],
             'seem_display' => $definition
           ],
           $requirements,
           [
             'parameters' => $parameters,
-//          '_admin_route' => $entity->usesAdminTheme(),
+            // @todo: Make admin_route configurable.
+            // '_admin_route' => $entity->usesAdminTheme(),
           ]
         );
         $collection->add($definition['context']['route'], $route);
       }
-
     }
+  }
 
-
-    // Route overrides.
-    foreach ($this->pluginManager->getDefinitionsBySeemDisplayable('existing_page') as $definition) {
+  /**
+   * Collect route overides for the seem display type 'page' and add them to the
+   * existing routes.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
+   */
+  protected function getSeemExistingPageRoutes(RouteCollection $collection) {
+    foreach ($this->seemDisplayManager->getDefinitionsBySeemDisplayable('existing_page') as $definition) {
+      // Special Route overrides for 404, 403 and 401 response definitions..
       if (isset($definition['response']) && $route = $collection->get($definition['context']['route'])) {
         if ($definition['response'] == 404) {
           $route->setDefaults([
@@ -97,27 +113,33 @@ class RouteSubscriber extends RouteSubscriberBase {
         }
       }
 
+      // Route parameter override.
+      // Seem supports overriding route parameters through the display plugin
+      // for existing pages. just add a parameter "route" => [].
+      // @todo: We probably need a good example for that in the example module.
       if (isset($definition['route']) && $route_overrides = $definition['route']) {
         if (isset($definition['context']['route']) && $route = $collection->get($definition['context']['route'])) {
           foreach ($route_overrides as $key => $values) {
             $method_key = ucfirst($key);
             if (method_exists($route, "get$method_key")) {
-//              if (!empty($route->{"get$method_key"}())) {
               $route->{"add$method_key"}($values);
-//              }
-//              else {
-//                $route->{"set$method_key"}($values);
-//              }
-//              $debug = 1;
             }
           }
         }
-//        $route->set
       }
     }
-
   }
 
+  /**
+   * Finds an existing route name for a given path.
+   *
+   * @param string $path
+   *   A path string.
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The collection holding all the routes we are searching in for the path.
+   * @return string $route_name
+   *   The route name if it exists.
+   */
   protected function findRouteName($path, RouteCollection $collection) {
     // Loop through all existing routes to see if this is overriding a route.
     foreach ($collection->all() as $name => $collection_route) {
@@ -132,7 +154,6 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
     }
   }
-
 
   /**
    * {@inheritdoc}

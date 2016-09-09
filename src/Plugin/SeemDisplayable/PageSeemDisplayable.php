@@ -5,7 +5,7 @@ namespace Drupal\seem\Plugin\SeemDisplayable;
 use Drupal\seem\Plugin\SeemDisplayableBase;
 
 /**
- * @todo A better description here.
+ * The seem_displayable plugin type for pages.
  *
  * @SeemDisplayable(
  *   id = "page",
@@ -14,20 +14,4 @@ use Drupal\seem\Plugin\SeemDisplayableBase;
  */
 class PageSeemDisplayable extends SeemDisplayableBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getContext($element) {
-    $debug = 1;
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPattern($element) {
-    $debug = 1;
-    return [];
-  }
-  
 }
