@@ -69,6 +69,7 @@ class SeemDisplay extends Plugin {
    */
   public $description = "";
   public $layout = "none";
+  public $settings = [];
 
   public $seem_displayable;
   public $context;

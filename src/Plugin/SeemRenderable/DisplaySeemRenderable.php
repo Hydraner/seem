@@ -26,7 +26,7 @@ class DisplaySeemRenderable extends SeemRenderableBase {
     }
 
     // @todo: Use Build function instead! But this has to be rewritten first :)
-    return $seem_display->processLayout($regions, $content['layout']);
+    return $seem_display->processLayout($regions, $content['layout'], $content['settings']);
   }
   
 }

@@ -114,10 +114,14 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     return $region;
   }
 
-  public function processLayout($regions, $layout) {
+  public function processLayout($regions, $layout, $configuration = []) {
     $layout_plugin_manager = Layout::layoutPluginManager();
     if ($layout_plugin_manager->hasDefinition($layout)) {
-      $layout = $layout_plugin_manager->createInstance($layout);
+      $layout = $layout_plugin_manager->createInstance($layout, []);
+      // Add support for default settings in layouts.
+      $default_settings = isset($layout->pluginDefinition['settings']) ? $layout->pluginDefinition['settings'] : [];
+      $layout->setConfiguration(array_merge($default_settings, $configuration));
+
       return $layout->build($regions);
     }
     // @todo: Return useful information if no definition exists.
@@ -131,7 +135,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     // @todo: make this more pretty :) But it works!
     $regions = $this->getProcessedRegions();
     if (isset($this->pluginDefinition['layout'])) {
-      $build = $this->processLayout($regions, $this->pluginDefinition['layout']);
+      $configuration = (isset($this->pluginDefinition['settings']) && $this->pluginDefinition['settings'] != null) ? $this->pluginDefinition['settings'] : [];
+      $build = $this->processLayout($regions, $this->pluginDefinition['layout'], $configuration);
     }
     else {
       $build = $regions;
