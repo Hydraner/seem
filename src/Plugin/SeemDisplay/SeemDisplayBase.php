@@ -114,6 +114,15 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     return $region;
   }
 
+  public function processLayout($regions, $layout) {
+    $layout_plugin_manager = Layout::layoutPluginManager();
+    if ($layout_plugin_manager->hasDefinition($layout)) {
+      $layout = $layout_plugin_manager->createInstance($layout);
+      return $layout->build($regions);
+    }
+    // @todo: Return useful information if no definition exists.
+  }
+
   /**
    * {@inheritdoc}
    *
@@ -122,11 +131,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     // @todo: make this more pretty :) But it works!
     $regions = $this->getProcessedRegions();
     if (isset($this->pluginDefinition['layout'])) {
-      $layout_plugin_manager = Layout::layoutPluginManager();
-      if ($layout_plugin_manager->hasDefinition($this->pluginDefinition['layout'])) {
-        $layout = $layout_plugin_manager->createInstance($this->pluginDefinition['layout']);
-        $build = $layout->build($regions);
-      }
+      $build = $this->processLayout($regions, $this->pluginDefinition['layout']);
     }
     else {
       $build = $regions;
