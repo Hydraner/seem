@@ -39,5 +39,4 @@ class HideSeemRenderable extends SeemRenderableBase {
   public function doExtraTasks(&$build) {
     unset($build[$this->region_key][$this->element_key]);
   }
-
 }

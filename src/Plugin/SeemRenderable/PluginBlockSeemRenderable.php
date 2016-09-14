@@ -91,5 +91,4 @@ class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerF
     // ::getCacheContexts methods.
     return $plugin_block->build();
   }
-
 }

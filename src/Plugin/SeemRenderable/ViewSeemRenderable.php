@@ -35,5 +35,4 @@ class ViewSeemRenderable extends SeemRenderableBase {
       '#arguments' => isset($content['arguments']) ? $content['arguments'] : [],
     ];
   }
-  
 }

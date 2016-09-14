@@ -2,7 +2,6 @@
 
 namespace Drupal\seem\Plugin\SeemRenderable;
 
-use Drupal\Core\Menu\MenuLinkTree;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
@@ -81,5 +80,4 @@ class MenuSeemRenderable extends SeemRenderableBase implements ContainerFactoryP
     // Get renderable array from the transformed tree.
     return $this->menuLinkTree->build($tree);
   }
-
 }

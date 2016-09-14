@@ -80,7 +80,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   }
 
   /**
-   * Collect route overides for the seem display type 'page' and add them to the
+   * Collect route overrides for the seem display type 'page' and add them to the
    * existing routes.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
