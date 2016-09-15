@@ -5,3 +5,5 @@ core: 8.x
 project: seem
 version: VERSION
 package: Seem
+dependencies:
+  - layout_plugin

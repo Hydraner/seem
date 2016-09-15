@@ -68,7 +68,7 @@ class ContentBlockSeemRenderable extends SeemRenderableBase implements Container
     if ($block instanceof EntityInterface) {
       return $this->entityTypeManager->getViewBuilder('block_content')->view($block);
     }
-    
+
     // @todo: Add useful error information.
     return [];
   }

@@ -12,6 +12,8 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\seem\Plugin\Discovery\YamlDirectoryDiscoveryDecorator;
 use Drupal\seem\Plugin\SeemDisplayableManager;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Provides the default seem_display manager.
@@ -202,6 +204,42 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
 
     return FALSE;
   }
+
+  public function recursiveFind(array $array, $needle) {
+    $iterator  = new RecursiveArrayIterator($array);
+    $recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+    $aHitList = array();
+    foreach ($recursive as $key => $value) {
+      if ($key === $needle) {
+        array_push($aHitList, $value);
+      }
+    }
+    return $aHitList;
+  }
+//
+//  function searchArray($array, $key, $value) {
+//    $results = array();
+//
+//    if (is_array($array)) {
+//      if (isset($array[$key]) && $array[$key] == $value) {
+//        $results[] = $array;
+//      }
+//
+//      foreach ($array as $subarray) {
+//        $results = array_merge($results, $this->searchArray($subarray, $key, $value));
+//      }
+//    }
+//
+//    return $results;
+//  }
+//
+//  public function getRenderableDisplayDefinitions() {
+//    $definitions = $this->searchArray($this->getDefinitions(), 'type', 'display');
+//
+//    $debug = 1;
+////    return $this->getDefinitions();
+//    return $definitions;
+//  }
 
   /**
    * Returns plugin definitions of the decorated discovery class, grouped by a

@@ -140,5 +140,4 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
     $this->title = $title;
     return $this;
   }
-
 }

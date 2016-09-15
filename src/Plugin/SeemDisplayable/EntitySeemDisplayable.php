@@ -43,5 +43,4 @@ class EntitySeemDisplayable extends SeemDisplayableBase {
 
     return $this->context;
   }
-
 }

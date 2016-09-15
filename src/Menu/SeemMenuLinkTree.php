@@ -15,6 +15,8 @@ class SeemMenuLinkTree extends MenuLinkTree {
   public function build(array $tree) {
     $build = parent::build($tree);
 
+    // Wrap each menu tree with a seem render element, in order to be able to
+    // add a display per menu.
     if (isset($build['#menu_name'])) {
       return [
         '#type' => 'seem',
@@ -23,7 +25,7 @@ class SeemMenuLinkTree extends MenuLinkTree {
         '#main_content' => $build
       ];
     }
+
     return $build;
   }
-
 }

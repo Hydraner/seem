@@ -32,5 +32,4 @@ abstract class SeemRenderableBase extends PluginBase implements SeemRenderableIn
    *   A build array.
    */
   public function doExtraTasks(&$build) {}
-
 }
