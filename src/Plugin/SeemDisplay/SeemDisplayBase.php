@@ -85,7 +85,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->layout = isset($this->pluginDefinition['layout']) ? $this->pluginDefinition['layout'] : $this->layout;
-    $this->layout_settings = isset($this->pluginDefinition['layout_settings']) ? $this->pluginDefinition['layout_settings'] : $this->layoutSettings;
+    $this->layoutSettings = isset($this->pluginDefinition['layout_settings']) ? $this->pluginDefinition['layout_settings'] : $this->layoutSettings;
   }
 
   /**
