@@ -238,15 +238,11 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 
   /**
    * {@inheritdoc}
-   *
-   * @todo: Continue refactoring.
    */
   public function build() {
-    // Get regions from display if none are provided.
-    if (empty($regions)) {
-      $regions = $this->getProcessedRegions();
-    }
+    $regions = $this->getProcessedRegions();
 
+    // Process layout if available.
     if ($this->layout) {
       $build = $this->processLayout($regions, $this->layout, $this->layoutSettings);
     }
@@ -254,84 +250,18 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $build = $regions;
     }
 
-
-    // If no region was set, we will render the main content.
+    // If no region was set, we will fallback to the main content.
     if (empty($build)) {
       $build['content'][] = $this->getMainContent();
     }
+
+    // Add the display information to the build array for later usage if needed.
     $build['#display'] = $this->getPluginDefinition();
-//    $build['#settings'] = $this->getConfiguration();
-//    if ($theme = $this->getThemeHook()) {
-//      $build['#theme'] = $theme;
-//    }
-//    if ($library = $this->getLibrary()) {
-//      $build['#attached']['library'][] = $library;
-//    }
+    // Add display specific configuration link.
+    // @todo: We need to append this also if their is no content regions like in
+    //        custom layouts for instance.
+    $build['content'][] = $this->addDisplayConfigurationLink();
 
-    $seem_displayable = \Drupal::getContainer()
-      ->get('plugin.manager.seem_displayable.processor')
-      ->createInstance($build['#display']['seem_displayable']);
-
-
-//    $seem_displayable_base_path = $seem_displayable->getBasePath($this->getContext());
-
-    // @todo: Add configuration link with context @see https://www.previousnext.com.au/blog/understanding-drupal-8s-modal-api-and-dialog-controller
-
-// Build link for dialog.
-//    $link_url = Url::fromRoute('entity.seem_display.config_form', array(
-
-    // @todo: Get config entity for context. Use parameters and display for context.
-//    $seem_display_entity = entity_load();
-//    $query = \Drupal::entityQuery('seem_display');
-    // @todo: Context per plugin. this just works for entities.
-    if (isset($this->pluginDefinition['context'])) {
-        $parameters = \Drupal::routeMatch()->getRawParameters()->all();
-        $display = $build['#display'];
-        $query = \Drupal::entityQuery('seem_display');
-        foreach ($parameters as $key => $value) {
-          $query->condition("parameters.$key", $value);
-        }
-        if (empty($parameters)) {
-          $query->condition("parameters", NULL, 'IS NULL');
-        }
-        foreach ($display['context'] as $key => $value) {
-          $query->condition("context.$key", $value);
-        }
-
-        $seem_display_id = $query->execute();
-        $entity_id = !empty($seem_display_id) ? key($query->execute()) : '';
-        if (!empty($entity_id)) {
-          $type = 'edit_form';
-        }
-        else {
-          $type = 'add_form';
-        }
-
-        $link_url = Url::fromRoute('entity.seem_display.' . $type, array(
-            'seem_display' => $entity_id,
-            'parameters' => Json::encode($parameters),
-            'display' => Json::encode(['display' => $display]),
-          )
-        );
-        $link_url->setOptions(array(
-            'attributes' => array(
-              'class' => array('use-ajax'),
-              'data-dialog-type' => 'modal',
-              'data-dialog-options' => Json::encode(array(
-                'width' => 700,
-              )),
-            )
-          )
-        );
-        // Magic link.
-        // @todo: We need better UX for that.
-        $link_add_unit_display_name = \Drupal::l('Create unit display name', $link_url);
-
-        $build['content'][] = [
-          '#markup' => $link_add_unit_display_name
-        ];
-
-      }
     return $build;
   }
 
@@ -363,6 +293,62 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     }
 
     return [];
+  }
+
+
+  public function addDisplayConfigurationLink() {
+    // @todo: Add configuration link with context @see https://www.previousnext.com.au/blog/understanding-drupal-8s-modal-api-and-dialog-controller
+    // @todo: Get config entity for context. Use parameters and display for context.
+    // @todo: Context per plugin. this just works for entities.
+
+    if (isset($this->pluginDefinition['context'])) {
+      $parameters = \Drupal::routeMatch()->getRawParameters()->all();
+      $display = $this->getPluginDefinition();
+      $query = \Drupal::entityQuery('seem_display');
+      foreach ($parameters as $key => $value) {
+        $query->condition("parameters.$key", $value);
+      }
+      if (empty($parameters)) {
+        $query->condition("parameters", NULL, 'IS NULL');
+      }
+      foreach ($display['context'] as $key => $value) {
+        $query->condition("context.$key", $value);
+      }
+
+      $seem_display_id = $query->execute();
+      $entity_id = !empty($seem_display_id) ? key($query->execute()) : '';
+      if (!empty($entity_id)) {
+        $type = 'edit_form';
+      }
+      else {
+        $type = 'add_form';
+      }
+
+      $link_url = Url::fromRoute('entity.seem_display.' . $type, array(
+          'seem_display' => $entity_id,
+          'parameters' => Json::encode($parameters),
+          'display' => Json::encode(['display' => $display]),
+        )
+      );
+      $link_url->setOptions(array(
+          'attributes' => array(
+            'class' => array('use-ajax'),
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode(array(
+              'width' => 700,
+            )),
+          )
+        )
+      );
+      // Magic link.
+      // @todo: We need better UX for that.
+      $link_add_unit_display_name = \Drupal::l('Display configuration', $link_url);
+
+      return [
+        '#markup' => $link_add_unit_display_name
+      ];
+
+    }
   }
 
   /**
