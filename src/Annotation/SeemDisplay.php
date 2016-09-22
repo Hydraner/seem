@@ -14,8 +14,6 @@ use Drupal\Component\Annotation\Plugin;
  *
  * SeemDisplay's are used to define a list of region and it's content.
  *
- * @todo: Ajust documentation since this is borrowed from Layout.php.
- *
  * Plugin namespace: Plugin\SeemDisplay
  *
  * @see \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface
@@ -35,18 +33,6 @@ class SeemDisplay extends Plugin {
   public $id;
 
   /**
-   * The layout type.
-   *
-   * Available options:
-   *  - full: Layout for the whole page.
-   *  - page: Layout for the main page response.
-   *  - partial: A partial layout that is typically used for sub-regions.
-   *
-   * @var string
-   */
-  public $type = 'page';
-
-  /**
    * The human-readable name.
    *
    * @var \Drupal\Core\Annotation\Translation
@@ -56,37 +42,51 @@ class SeemDisplay extends Plugin {
   public $label;
 
   /**
-   * An optional description for advanced layouts.
-   *
-   * Sometimes layouts are so complex that the name is insufficient to describe
-   * a layout such that a visually impaired administrator could layout a page
-   * for a non-visually impaired audience. If specified, it will provide a
-   * description that is used for accessibility purposes.
+   * An optional description for advanced displays
    *
    * @var \Drupal\Core\Annotation\Translation
    *
    * @ingroup plugin_translatable
    */
   public $description = "";
-  public $layout = "none";
-  public $settings = [];
-
-  public $seem_displayable;
-  public $context;
-  public $config;
 
   /**
-   * An associative array of regions in this layout.
+   * The context defines the selection rule for a display. The required data
+   * is defined by the seem displayable, which will use the context data to
+   * select the display for the requested context. For instance for an
+   * existing_page displayable, the rout must be provided by the context.
+   *
+   * @var array
+   */
+  public $context;
+
+  /**
+   * An optional layout from layout_plugins module. It is recommended to use a
+   * layout with a display to have some nice markup. When not using a layout,
+   * the regions will be rendered without markup.
+   *
+   * @var string
+   */
+  public $layout = "none";
+
+  /**
+   * Optional settings for the layout. Defined settings will directly be passed
+   * to the layout.
+   *
+   * @var array
+   */
+  public $layout_settings = [];
+
+  /**
+   * An associative array of regions.
    *
    * The key of the array is the machine name of the region, and the value is
-   * an associative array with the following keys:
-   * - label: (string) The human-readable name of the region.
+   * an associative array with the seem renderable definitions.
    *
-   * Any remaining keys may have special meaning for the given layout plugin,
-   * but are undefined here.
+   * If a layout is selected, the regions will be mapped directly on the regions
+   * defined in the layout.
    *
    * @var array
    */
   public $regions = array();
-
 }

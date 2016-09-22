@@ -260,7 +260,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $build['content'][] = $this->getMainContent();
     }
     $build['#display'] = $this->getPluginDefinition();
-    $build['#settings'] = $this->getConfiguration();
+//    $build['#settings'] = $this->getConfiguration();
 //    if ($theme = $this->getThemeHook()) {
 //      $build['#theme'] = $theme;
 //    }

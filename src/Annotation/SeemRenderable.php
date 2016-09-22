@@ -14,7 +14,6 @@ use Drupal\Component\Annotation\Plugin;
  */
 class SeemRenderable extends Plugin {
 
-
   /**
    * The plugin ID.
    *
@@ -30,5 +29,4 @@ class SeemRenderable extends Plugin {
    * @ingroup plugin_translatable
    */
   public $label;
-
 }

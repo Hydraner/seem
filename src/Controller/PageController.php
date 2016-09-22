@@ -16,21 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class PageController extends ControllerBase {
 
-
-  public function __construct(CurrentRouteMatch $current_route_match, SeemDisplayableManager $seem_displayable) {
-    $this->currentRouteMatch = $current_route_match;
-
-    $this->seemDisplayable = $seem_displayable;
-  }
-
-
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('current_route_match'),
-      $container->get('plugin.manager.seem_displayable.processor')
-    );
-  }
-
   /**
    * Since the display is managing the content of landing page, we don't need
    * to do here anything, since we have no main_content. An empty array will
@@ -54,17 +39,4 @@ class PageController extends ControllerBase {
     // parameters from the route and/or request as needed.
     return AccessResult::allowed();
   }
-
-  public function viewSeemDisplayConfig() {
-    $debug = 1;
-    $parameters = $this->currentRouteMatch->getParameters();
-    $seem_displayable_definition = $parameters->get('seem_displayable_definition');
-
-    $displayable = $this->seemDisplayable->createInstance($seem_displayable_definition['id']);
-
-
-    $label = $parameters->get('seem_displayable_definition')['label']->render();
-    return ['#markup' => "Dies ist ein $label"];
-  }
-
 }
