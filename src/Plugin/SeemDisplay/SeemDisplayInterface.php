@@ -159,4 +159,7 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    *   A render array with a processed layout.
    */
   public function processLayout($regions, $layout, $configuration = []);
+
+  public function pageBuild($build);
+  public function getExistingRegions();
 }

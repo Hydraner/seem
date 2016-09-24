@@ -56,7 +56,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    *
    * @var \Drupal\seem\Plugin\SeemRenderableManager
    */
-  protected $seemRenderable;
+  protected $seemRenderableManager;
 
   /**
    * The layout manager.
@@ -74,13 +74,13 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\seem\Plugin\SeemRenderableManager $seem_renderable
+   * @param \Drupal\seem\Plugin\SeemRenderableManager $seem_renderable_manager
    *   The seem renderable plugin manager.
    * @param \Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface $layout_manager
    *   Layout manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SeemRenderableManager $seem_renderable, LayoutPluginManagerInterface $layout_manager) {
-    $this->seemRenderable = $seem_renderable;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SeemRenderableManager $seem_renderable_manager, LayoutPluginManagerInterface $layout_manager) {
+    $this->seemRenderableManager = $seem_renderable_manager;
     $this->layoutManager = $layout_manager;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -192,9 +192,9 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     $region = [];
     foreach ($region_definition as $content) {
       // Check if their is a matching seem renderable.
-      if ($this->seemRenderable->hasDefinition($content['type'])) {
+      if ($this->seemRenderableManager->hasDefinition($content['type'])) {
         // Create an seemRenderable instance for the given region.
-        $seem_renderable = $this->seemRenderable->createInstance($content['type'], ['region_key' => $region_key]);
+        $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
         $region[] = $seem_renderable->doRenderable($content, $this);
       }
       else {
@@ -266,17 +266,15 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   }
 
   // This only needs to be done in a page/existing_page context.
+  /**
+   * {@inheritdoc}
+   */
   public function pageBuild($build) {
     // @todo: Reuse processRegion.
     foreach ($this->getExistingRegions() as $region_key => $region_definition) {
       foreach ($region_definition as $content) {
-        if (\Drupal::getContainer()
-          ->get('plugin.manager.seem_renderable.processor')
-          ->hasDefinition($content['type'])
-        ) {
-          $seem_renderable = \Drupal::getContainer()
-            ->get('plugin.manager.seem_renderable.processor')
-            ->createInstance($content['type'], ['region_key' => $region_key]);
+        if ($this->seemRenderableManager->hasDefinition($content['type'])) {
+          $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
           $renderable = $seem_renderable->doRenderable($content, $this);
           $build[$region_key][] = $renderable;
           $seem_renderable->doExtraTasks($build);
@@ -287,6 +285,9 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getExistingRegions() {
     if (isset($this->pluginDefinition['existing_regions'])) {
       return $this->pluginDefinition['existing_regions'];
