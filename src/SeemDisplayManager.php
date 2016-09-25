@@ -121,9 +121,9 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     // Define themes as additional plugin source.
     $directories = array_merge($this->moduleHandler->getModuleDirectories(), $this->themeHandler->getThemeDirectories());
 
-    // Make the discovery search in /layout directory.
+    // Make the discovery search in /seem_display directory.
     foreach ($directories as &$directory) {
-      $directory = $directory . '/display';
+      $directory = $directory . '/seem_display';
     }
 
     return $directories;
@@ -164,11 +164,11 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     //        know this.
     if (isset($definition['_discovered_file_path'])) {
       $basename = basename($definition['_discovered_file_path']);
-      $basename_fragments = explode('.display.yml', $basename);
+      $basename_fragments = explode('.seem_display.yml', $basename);
       $basename_fragments = explode('.', $basename_fragments[0]);
       $count = count($basename_fragments);
       $definition['seem_displayable'] = $basename_fragments[$count-1];
-      $basename_fragments = explode('.' . $basename_fragments[$count-1] . '.display.yml', $basename);
+      $basename_fragments = explode('.' . $basename_fragments[$count-1] . '.seem_display.yml', $basename);
       $definition['id'] = $basename_fragments[0];
     }
 
