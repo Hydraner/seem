@@ -24,6 +24,18 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
   public function build();
 
   /**
+   * Add extra render arrays to the complete displayVariant. This only makes
+   * sense in the context of a page, where the blockPageVariant or a
+   * pageManagerDisplayVariant may wraps our display.
+   *
+   * @param $build
+   *   A render array given by a displayVariant.
+   * @return array
+   *   Manipulated render array from displayVariant.
+   */
+  public function pageBuild($build);
+
+  /**
    * Gets the human-readable name.
    *
    * @return \Drupal\Core\Annotation\Translation|NULL
@@ -132,11 +144,14 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    *   The region definition.
    * @param $region_key
    *   The region key.
+   * @param $build
+   *   An optional build array to be able to perform extra tasks on the build
+   *   array like hiding existing stuff.
    * @return array $region
    *   A renderable array which representates the region definition from as
    *   defined in the display.
    */
-  public function processRegion($region_definition, $region_key);
+  public function processRegion($region_definition, $region_key, &$build = []);
 
   /**
    * Processes all regions defined by the display.
@@ -160,6 +175,12 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    */
   public function processLayout($regions, $layout, $configuration = []);
 
-  public function pageBuild($build);
-  public function getExistingRegions();
+  /**
+   * Get information on existing regions (in the context of a page) keyed by
+   * machine name.
+   *
+   * @return array
+   *   An array of information on regions keyed by machine name.
+   */
+  public function getExistingRegionsDefinition();
 }

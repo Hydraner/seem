@@ -188,7 +188,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   /**
    * {@inheritdoc}
    */
-  public function processRegion($region_definition, $region_key) {
+  public function processRegion($region_definition, $region_key, &$build = []) {
     $region = [];
     foreach ($region_definition as $content) {
       // Check if their is a matching seem renderable.
@@ -196,6 +196,9 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
         // Create an seemRenderable instance for the given region.
         $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
         $region[] = $seem_renderable->doRenderable($content, $this);
+        if (!empty($build)) {
+          $seem_renderable->doExtraTasks($build);
+        }
       }
       else {
         // @todo: Return exception that the renderable type does not exists.
@@ -271,15 +274,16 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    */
   public function pageBuild($build) {
     // @todo: Reuse processRegion.
-    foreach ($this->getExistingRegions() as $region_key => $region_definition) {
-      foreach ($region_definition as $content) {
-        if ($this->seemRenderableManager->hasDefinition($content['type'])) {
-          $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
-          $renderable = $seem_renderable->doRenderable($content, $this);
-          $build[$region_key][] = $renderable;
-          $seem_renderable->doExtraTasks($build);
-        }
-      }
+    foreach ($this->getExistingRegionsDefinition() as $region_key => $region_definition) {
+      $build[$region_key] = $this->processRegion($region_definition, $region_key, $build);
+//      foreach ($region_definition as $content) {
+//        if ($this->seemRenderableManager->hasDefinition($content['type'])) {
+//          $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
+//          $renderable = $seem_renderable->doRenderable($content, $this);
+//          $build[$region_key][] = $renderable;
+//          $seem_renderable->doExtraTasks($build);
+//        }
+//      }
     }
     
     return $build;
@@ -288,7 +292,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   /**
    * {@inheritdoc}
    */
-  public function getExistingRegions() {
+  public function getExistingRegionsDefinition() {
     if (isset($this->pluginDefinition['existing_regions'])) {
       return $this->pluginDefinition['existing_regions'];
     }
