@@ -3,7 +3,7 @@
 Seem is a site-building tool for coders.
 
 Seem allows you to take control over the rendering of Drupal things like nodes,
-views, or blocks.
+views, or blocks (we call these things 'renderables').
 
 Seem solves the same kinds of problems that modules such as page manager,
 panels, and display suite solve - allowing targeted placement of content in a
@@ -77,7 +77,15 @@ mkdir -p themes/bartikseem/seem_display
 vim seem_example.entity.seem_display.yml
 ```
 
-Edit ```seem_display.yml``` as follows:
+The file naming convention is as follows:
+
+- seem_example - this is an arbitrary string, it can be whatever you like.
+- entity - this is the displayable plugin type - in our case, it means that we
+are about to alter the rendering of an entity.
+- seem_display.yml - this tells Drupal that we are about to define a
+seem_display plugin.
+
+Edit ```seem_example.entity.seem_display.yml``` as follows:
 
 ```
 label: 'Seem example'
