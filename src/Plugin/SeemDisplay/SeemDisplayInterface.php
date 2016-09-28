@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\seem\Plugin\SeemDisplayPluginInterface.
- */
-
 namespace Drupal\seem\Plugin\SeemDisplay;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
@@ -24,12 +19,14 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
   public function build();
 
   /**
-   * Add extra render arrays to the complete displayVariant. This only makes
-   * sense in the context of a page, where the blockPageVariant or a
-   * pageManagerDisplayVariant may wraps our display.
+   * Add extra render arrays to the complete displayVariant.
    *
-   * @param $build
+   * This only makes sense in the context of a page, where the blockPageVariant
+   * or a pageManagerDisplayVariant may wraps our display.
+   *
+   * @param array $build
    *   A render array given by a displayVariant.
+   *
    * @return array
    *   Manipulated render array from displayVariant.
    */
@@ -38,7 +35,7 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
   /**
    * Gets the human-readable name.
    *
-   * @return \Drupal\Core\Annotation\Translation|NULL
+   * @return \Drupal\Core\Annotation\Translation|null
    *   The human-readable name.
    */
   public function getLabel();
@@ -46,18 +43,20 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
   /**
    * Gets the optional description for advanced layouts.
    *
-   * @return \Drupal\Core\Annotation\Translation|NULL
+   * @return \Drupal\Core\Annotation\Translation|null
    *   The layout description.
    */
   public function getDescription();
 
   /**
-   * Pass the context from the displayable element to the display, to be able to
-   * render it later in the display.
+   * Pass the context from the displayable element to the display.
    *
-   * @param $main_content
+   * To be able to render it later in the display.
+   *
+   * @param array $main_content
    *   The context's render array.
-   * @return \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface $this
+   *
+   * @return \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface
    *   The seemDisplay.
    */
   public function setMainContent($main_content);
@@ -75,7 +74,8 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    *
    * @param string $layout
    *   The layout id.
-   * @return \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface $this
+   *
+   * @return \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface
    *   The seemDisplay.
    */
   public function setLayout($layout);
@@ -95,7 +95,8 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    *   The settings key.
    * @param string $value
    *   The settings value.
-   * @return $settings
+   *
+   * @return array
    *   The settings.
    */
   public function setLayoutSetting($key, $value);
@@ -105,7 +106,8 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    *
    * @param string $layout_settings
    *   An array containing the layout settings.
-   * @return $settings
+   *
+   * @return array
    *   The settings.
    */
   public function setLayoutSettings($layout_settings);
@@ -115,7 +117,8 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
    *
    * @param string $regions
    *   An array containing the region definitions..
-   * @return $this
+   *
+   * @return array
    *   The seem_display object.
    */
   public function setRegionDefinitions($regions);
@@ -137,26 +140,26 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
   public function getRegionDefinitions();
 
   /**
-   * Processes a region definitions by calling the related seem_renderable
-   * and let him do the magic.
+   * Processes a region definitions by calling the related seem_renderable.
    *
-   * @param $region_definition
+   * @param array $region_definition
    *   The region definition.
-   * @param $region_key
+   * @param string $region_key
    *   The region key.
-   * @param $build
+   * @param array $build
    *   An optional build array to be able to perform extra tasks on the build
    *   array like hiding existing stuff.
-   * @return array $region
-   *   A renderable array which representates the region definition from as
-   *   defined in the display.
+   *
+   * @return array
+   *   A renderable array which represents the region definition from as defined
+   *   in the display.
    */
   public function processRegion($region_definition, $region_key, &$build = []);
 
   /**
    * Processes all regions defined by the display.
    *
-   * @return array $regions
+   * @return array
    *   A render array containing all processed regions.
    */
   public function getProcessedRegions();
@@ -164,23 +167,26 @@ interface SeemDisplayInterface extends PluginInspectionInterface, DerivativeInsp
   /**
    * Processes the defined layout.
    *
-   * @param $regions
+   * @param array $regions
    *   A render array with processed regions. @see $this->getProcessedRegions().
-   * @param $layout
+   * @param string $layout
    *   A layout id.
    * @param array $configuration
    *   Additional configuration for the layout plugin.
+   *
    * @return mixed
    *   A render array with a processed layout.
    */
   public function processLayout($regions, $layout, $configuration = []);
 
   /**
-   * Get information on existing regions (in the context of a page) keyed by
-   * machine name.
+   * Get information on existing regions.
+   *
+   * In the context of a page keyed by machine name.
    *
    * @return array
    *   An array of information on regions keyed by machine name.
    */
   public function getExistingRegionsDefinition();
+
 }

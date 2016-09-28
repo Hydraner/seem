@@ -21,7 +21,7 @@ class DisplaySeemRenderable extends SeemRenderableBase implements ContainerFacto
   /**
    * The seem_display plugin manager.
    *
-   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   * @var \Drupal\seem\SeemDisplayManagerInterface
    */
   protected $seemDisplayManager;
 
@@ -35,7 +35,7 @@ class DisplaySeemRenderable extends SeemRenderableBase implements ContainerFacto
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\seem\SeemDisplayManager $seem_display_manager
-   *   The seem display manager
+   *   The seem display manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, SeemDisplayManager $seem_display_manager) {
     $this->seemDisplayManager = $seem_display_manager;
@@ -74,4 +74,5 @@ class DisplaySeemRenderable extends SeemRenderableBase implements ContainerFacto
 
     return $renderable_seem_display->build();
   }
+
 }

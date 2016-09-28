@@ -17,7 +17,7 @@ class SeemDisplayListBuilder extends ConfigEntityListBuilder {
   /**
    * The seem_display plugin manager.
    *
-   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   * @var \Drupal\seem\SeemDisplayManagerInterface
    */
   protected $seemDisplayManager;
 
@@ -29,9 +29,9 @@ class SeemDisplayListBuilder extends ConfigEntityListBuilder {
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
    * @param \Drupal\seem\SeemDisplayManager $seem_display_manager
-   *   The seem display manager
+   *   The seem display manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, $seem_display_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SeemDisplayManager $seem_display_manager) {
     $this->seemDisplayManager = $seem_display_manager;
     parent::__construct($entity_type, $storage);
   }
@@ -110,7 +110,7 @@ class SeemDisplayListBuilder extends ConfigEntityListBuilder {
   /**
    * Builds a row for an plugin in the plugin listing.
    *
-   * @param $definition
+   * @param array $definition
    *   The plugins definition.
    *
    * @return array

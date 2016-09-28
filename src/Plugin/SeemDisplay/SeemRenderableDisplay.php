@@ -12,7 +12,6 @@ namespace Drupal\seem\Plugin\SeemDisplay;
  *   seem_displayable = "display",
  * )
  */
-
-class SeemRenderableDisplay extends SeemDisplayDefault{
+class SeemRenderableDisplay extends SeemDisplayDefault {
 
 }

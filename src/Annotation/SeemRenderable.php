@@ -29,4 +29,5 @@ class SeemRenderable extends Plugin {
    * @ingroup plugin_translatable
    */
   public $label;
+
 }

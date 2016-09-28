@@ -10,6 +10,8 @@ use Drupal\seem\SeemDisplayManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Display variant.
+ *
  * Provides a variant plugin, which will build a display based on a seem display
  * configuration.
  *
@@ -24,14 +26,14 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
   /**
    * The variant plugin manager.
    *
-   * \Drupal\Core\Display\VariantManager
+   * @var \Drupal\Core\Display\VariantManager
    */
   protected $displayVariantManager;
 
   /**
    * The seem_display plugin manager.
    *
-   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   * @var \Drupal\seem\SeemDisplayManagerInterface
    */
   protected $seemDisplayManager;
 
@@ -140,4 +142,5 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
     $this->title = $title;
     return $this;
   }
+
 }

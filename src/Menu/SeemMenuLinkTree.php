@@ -22,10 +22,10 @@ class SeemMenuLinkTree extends MenuLinkTree {
         '#type' => 'seem',
         '#displayable' => 'menu',
         '#menu_name' => $build['#menu_name'],
-        '#main_content' => $build
+        '#main_content' => $build,
       ];
     }
-
     return $build;
   }
+
 }

@@ -21,7 +21,7 @@ class MenuSeemRenderable extends SeemRenderableBase implements ContainerFactoryP
   /**
    * The menu link tree interface.
    *
-   * @return \Drupal\Core\Menu\MenuLinkTreeInterface
+   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
    *   The menu tree.
    */
   protected $menuLinkTree;
@@ -35,7 +35,7 @@ class MenuSeemRenderable extends SeemRenderableBase implements ContainerFactoryP
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
    *   The menu tree.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_link_tree) {
@@ -80,4 +80,5 @@ class MenuSeemRenderable extends SeemRenderableBase implements ContainerFactoryP
     // Get renderable array from the transformed tree.
     return $this->menuLinkTree->build($tree);
   }
+
 }

@@ -23,4 +23,5 @@ class MarkupSeemRenderable extends SeemRenderableBase {
     $markup = new TranslatableMarkup($content['markup']);
     return ['#markup' => $markup];
   }
+
 }

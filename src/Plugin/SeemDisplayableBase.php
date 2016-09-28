@@ -7,7 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
- * Base class for Seem element type plugin plugins.
+ * Class SeemDisplayableBase.
+ *
+ * @package Drupal\seem\Plugin
  */
 abstract class SeemDisplayableBase extends PluginBase implements SeemDisplayableInterface, PluginFormInterface {
 

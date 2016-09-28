@@ -12,7 +12,7 @@ abstract class SeemRenderableBase extends PluginBase implements SeemRenderableIn
   /**
    * A region key.
    *
-   * @var string $region_key
+   * @var string
    *   The region key of the current region.
    */
   protected $region_key;
@@ -28,8 +28,9 @@ abstract class SeemRenderableBase extends PluginBase implements SeemRenderableIn
   /**
    * Adds the possibility to do some extra tasks on the finished build.
    *
-   * @param $build
+   * @param array $build
    *   A build array.
    */
   public function doExtraTasks(&$build) {}
+
 }

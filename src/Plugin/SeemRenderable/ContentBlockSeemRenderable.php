@@ -23,7 +23,7 @@ class ContentBlockSeemRenderable extends SeemRenderableBase implements Container
   /**
    * The entity type manager.
    *
-   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    *   The menu tree.
    */
   protected $entityTypeManager;
@@ -37,7 +37,7 @@ class ContentBlockSeemRenderable extends SeemRenderableBase implements Container
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
@@ -72,4 +72,5 @@ class ContentBlockSeemRenderable extends SeemRenderableBase implements Container
     // @todo: Add useful error information.
     return [];
   }
+
 }

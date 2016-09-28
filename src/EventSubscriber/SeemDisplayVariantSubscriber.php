@@ -17,7 +17,7 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
   /**
    * The seem_display plugin manager.
    *
-   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   * @var \Drupal\seem\SeemDisplayManagerInterface
    */
   protected $seemDisplayPluginManager;
 
@@ -25,7 +25,7 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
    * Constructs a new SeemDisplayVariantSubscriber object.
    *
    * @param \Drupal\seem\SeemDisplayManager $seem_display_plugin_manager
-   *   The seem display manager
+   *   The seem display manager.
    */
   public function __construct(SeemDisplayManager $seem_display_plugin_manager) {
     $this->seemDisplayPluginManager = $seem_display_plugin_manager;
@@ -43,10 +43,10 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
     // of the page, we will inject the matching seem layout into the original
     // display variant.
     $configuration = array_merge($event->getPluginConfiguration(), ['original_display_variant_plugin_id' => $event->getPluginId()]);
-    
+
     // If we have a seem_display on the route, we can be sure it's cause we
     // registered the route ourselves.
-    if (null !== $event->getRouteMatch()->getParameter('seem_display') && is_array($event->getRouteMatch()->getParameter('seem_display'))) {
+    if (NULL !== $event->getRouteMatch()->getParameter('seem_display') && is_array($event->getRouteMatch()->getParameter('seem_display'))) {
       // @todo: Replace suggestion with file_name or ID?
       $configuration['suggestion'] = $event->getRouteMatch()->getParameter('plugin_id');
       $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();
@@ -56,11 +56,8 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
 
       $event->setPluginConfiguration($configuration);
       $event->setPluginId('seem_variant');
-      
-      $debug = 1;
     }
     else {
-
       $context = ['route' => $event->getRouteMatch()->getRouteName()];
       $seem_display = $this->seemDisplayPluginManager->getDefinitionByContext($context, 'existing_page');
 
@@ -78,16 +75,13 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
         // We can assume that their is no existing page context. So what about
         // the other contexts.
       }
-
-
     }
-
   }
 
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[RenderEvents::SELECT_PAGE_DISPLAY_VARIANT][] = array('onSelectPageDisplayVariant');
     return $events;
   }

@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
  * You should normally extend this class to add validation for the values in the
  * YAML data or to restrict use of the class or derivatives keys.
  *
- * @see Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator.
+ * @see \Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator.
  */
 class YamlDirectoryDiscoveryDecorator extends YamlDirectoryDiscovery {
 
@@ -40,7 +40,6 @@ class YamlDirectoryDiscoveryDecorator extends YamlDirectoryDiscovery {
    */
   public function __construct(DiscoveryInterface $decorated, array $directories, $file_cache_key_suffix, $key = 'id') {
     parent::__construct($directories, $file_cache_key_suffix, $key);
-
     $this->decorated = $decorated;
   }
 
@@ -57,4 +56,5 @@ class YamlDirectoryDiscoveryDecorator extends YamlDirectoryDiscovery {
   public function __call($method, $args) {
     return call_user_func_array(array($this->decorated, $method), $args);
   }
+
 }

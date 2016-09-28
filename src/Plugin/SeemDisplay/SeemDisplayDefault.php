@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\seem\Plugin\SeemDisplay\SeemDefault.
- */
-
 namespace Drupal\seem\Plugin\SeemDisplay;
 
 /**

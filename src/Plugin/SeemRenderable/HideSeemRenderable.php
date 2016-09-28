@@ -18,7 +18,7 @@ class HideSeemRenderable extends SeemRenderableBase {
   /**
    * The key of the render Element which should be hided.
    *
-   * @var $element_key
+   * @var string
    *   The elements key.
    */
   protected $element_key;
@@ -39,4 +39,5 @@ class HideSeemRenderable extends SeemRenderableBase {
   public function doExtraTasks(&$build) {
     unset($build[$this->region_key][$this->element_key]);
   }
+
 }

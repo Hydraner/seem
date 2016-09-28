@@ -3,20 +3,19 @@
 namespace Drupal\seem\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\seem\SeemLayoutPluginManager;
 
 /**
  * Provides automated tests for the seem module.
  */
 class PageControllerTest extends WebTestBase {
 
-
   /**
    * Drupal\seem\SeemLayoutPluginManager definition.
    *
-   * @var Drupal\seem\SeemLayoutPluginManager
+   * @var \Drupal\seem\SeemLayoutPluginManager
    */
   protected $plugin_manager_seem_layout_plugin;
+
   /**
    * {@inheritdoc}
    */

@@ -15,7 +15,9 @@ use Drupal\seem\Plugin\SeemDisplayableBase;
 class EntitySeemDisplayable extends SeemDisplayableBase {
 
   /**
-   * @var $context
+   * The context.
+   *
+   * @var mixed
    */
   protected $context;
 
@@ -26,21 +28,30 @@ class EntitySeemDisplayable extends SeemDisplayableBase {
     $this->context = [
       'entity_type' => $element['#entity_type'],
       'bundle' => $element['#bundle'],
-      'view_mode' => $element['#view_mode']
+      'view_mode' => $element['#view_mode'],
     ];
-
     return $this->context;
   }
 
-  // @todo: Make this work. does it?
+  /**
+   * Get config context.
+   *
+   * @param array $element
+   *   The render element.
+   *
+   * @return array|mixed
+   *   The config context.
+   *
+   * @todo: Make this work. does it?
+   */
   public function getConfigContext($element) {
     $this->context = [
       'entity_type' => $element['#entity_type'],
       'bundle' => $element['#bundle'],
       'view_mode' => $element['#view_mode'],
-      'entity_id' => $element['#entity_id']
+      'entity_id' => $element['#entity_id'],
     ];
-
     return $this->context;
   }
+
 }

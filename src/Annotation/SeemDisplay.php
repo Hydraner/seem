@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\seem\Annotation\SeemDisplay.
- */
-
 namespace Drupal\seem\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
@@ -42,7 +37,7 @@ class SeemDisplay extends Plugin {
   public $label;
 
   /**
-   * An optional description for advanced displays
+   * An optional description for advanced displays.
    *
    * @var \Drupal\Core\Annotation\Translation
    *
@@ -51,27 +46,30 @@ class SeemDisplay extends Plugin {
   public $description = "";
 
   /**
-   * The context defines the selection rule for a display. The required data
-   * is defined by the seem displayable, which will use the context data to
-   * select the display for the requested context. For instance for an
-   * existing_page displayable, the rout must be provided by the context.
+   * The context defines the selection rule for a display.
+   *
+   * The required data is defined by the seem displayable, which will use the
+   * context data to select the display for the requested context. For instance
+   * for an existing_page displayable, the rout must be provided by the context.
    *
    * @var array
    */
   public $context;
 
   /**
-   * An optional layout from layout_plugins module. It is recommended to use a
-   * layout with a display to have some nice markup. When not using a layout,
-   * the regions will be rendered without markup.
+   * An optional layout from layout_plugins module.
+   *
+   * It is recommended to use a layout with a display to have some nice markup.
+   * When not using a layout, the regions will be rendered without markup.
    *
    * @var string
    */
   public $layout = "none";
 
   /**
-   * Optional settings for the layout. Defined settings will directly be passed
-   * to the layout.
+   * Optional settings for the layout.
+   *
+   * Defined settings will directly be passed to the layout.
    *
    * @var array
    */
@@ -89,4 +87,5 @@ class SeemDisplay extends Plugin {
    * @var array
    */
   public $regions = array();
+
 }

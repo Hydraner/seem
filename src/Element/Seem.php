@@ -25,7 +25,7 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
   /**
    * The seem_display plugin manager.
    *
-   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   * @var \Drupal\seem\SeemDisplayManagerInterface
    */
   protected $seemDisplayPluginManager;
 
@@ -41,7 +41,7 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
    * @param \Drupal\seem\Plugin\SeemDisplayableManager $seem_displayable_plugin_manager
    *   The seem_displayable plugin manager.
    * @param \Drupal\seem\SeemDisplayManager $seem_display_plugin_manager
-   *   The seem display manager
+   *   The seem display manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, SeemDisplayableManager $seem_displayable_plugin_manager, SeemDisplayManager $seem_display_plugin_manager) {
     $this->seemDisplayablePluginManager = $seem_displayable_plugin_manager;

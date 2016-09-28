@@ -1,15 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\seem\Plugin\SeemDisplay\SeemDisplayBase.
- */
-
 namespace Drupal\seem\Plugin\SeemDisplay;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -262,30 +258,23 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     $build['#display'] = $this->getPluginDefinition();
     // Add display specific configuration link.
     // @todo: We need to append this also if their is no content regions like in
-    //        custom layouts for instance.
+    // custom layouts for instance.
     $build['content'][] = $this->addDisplayConfigurationLink();
 
     return $build;
   }
 
-  // This only needs to be done in a page/existing_page context.
   /**
    * {@inheritdoc}
+   *
+   * This only needs to be done in a page/existing_page context.
    */
   public function pageBuild($build) {
     // @todo: Reuse processRegion.
     foreach ($this->getExistingRegionsDefinition() as $region_key => $region_definition) {
       $build[$region_key] = $this->processRegion($region_definition, $region_key, $build);
-//      foreach ($region_definition as $content) {
-//        if ($this->seemRenderableManager->hasDefinition($content['type'])) {
-//          $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
-//          $renderable = $seem_renderable->doRenderable($content, $this);
-//          $build[$region_key][] = $renderable;
-//          $seem_renderable->doExtraTasks($build);
-//        }
-//      }
+      // .
     }
-    
     return $build;
   }
 
@@ -296,11 +285,15 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     if (isset($this->pluginDefinition['existing_regions'])) {
       return $this->pluginDefinition['existing_regions'];
     }
-
     return [];
   }
 
-
+  /**
+   * Add a display configuration link.
+   *
+   * @return array
+   *   An array with some markup.
+   */
   public function addDisplayConfigurationLink() {
     // @todo: Add configuration link with context @see https://www.previousnext.com.au/blog/understanding-drupal-8s-modal-api-and-dialog-controller
     // @todo: Get config entity for context. Use parameters and display for context.
@@ -329,30 +322,32 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
         $type = 'add_form';
       }
 
-      $link_url = Url::fromRoute('entity.seem_display.' . $type, array(
+      $link_url = Url::fromRoute(
+        'entity.seem_display.' . $type,
+        array(
           'seem_display' => $entity_id,
           'parameters' => Json::encode($parameters),
           'display' => Json::encode(['display' => $display]),
         )
       );
-      $link_url->setOptions(array(
+      $link_url->setOptions(
+        array(
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-dialog-type' => 'modal',
-            'data-dialog-options' => Json::encode(array(
-              'width' => 700,
-            )),
-          )
+            'data-dialog-options' => Json::encode(
+              array(
+                'width' => 700,
+              )
+            ),
+          ),
         )
       );
       // Magic link.
       // @todo: We need better UX for that.
-      $link_add_unit_display_name = \Drupal::l('Display configuration', $link_url);
-
       return [
-        '#markup' => $link_add_unit_display_name
+        '#markup' => Link::fromTextAndUrl('Display configuration', $link_url),
       ];
-
     }
   }
 

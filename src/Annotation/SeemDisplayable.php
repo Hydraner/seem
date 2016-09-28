@@ -28,4 +28,5 @@ class SeemDisplayable extends Plugin {
    * @ingroup plugin_translatable
    */
   public $label;
+
 }

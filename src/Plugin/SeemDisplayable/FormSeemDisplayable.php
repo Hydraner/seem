@@ -25,11 +25,21 @@ class FormSeemDisplayable extends SeemDisplayableBase {
     return ['form_id' => $element['#form_id']];
   }
 
-  // @todo: make this work.
+  /**
+   * Get config context.
+   *
+   * @param array $element
+   *   A render element.
+   *
+   * @return array
+   *   A config context.
+   *
+   * @todo: make this work.
+   */
   public function getConfigContext($element) {
     return [
       'form_id' => $element['#form_id'],
-      'route' => ''
+      'route' => '',
     ];
   }
 
@@ -38,14 +48,13 @@ class FormSeemDisplayable extends SeemDisplayableBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     parent::buildConfigurationForm($form, $form_state);
-
     $form['config']['new_submit'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Submit value'),
       '#maxlength' => '255',
       '#description' => $this->t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions.'),
     );
-
     return $form;
   }
+
 }

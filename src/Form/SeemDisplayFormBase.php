@@ -101,7 +101,7 @@ abstract class SeemDisplayFormBase extends EntityForm {
 
     $form['config_keys'] = [
       '#type' => 'hidden',
-      '#value' => isset($form['config']) ? array_keys($form['config']) : []
+      '#value' => isset($form['config']) ? array_keys($form['config']) : [],
     ];
 
     if (!$this->entity->isNew()) {
@@ -117,7 +117,7 @@ abstract class SeemDisplayFormBase extends EntityForm {
    * Determines if the action already exists.
    *
    * @param string $id
-   *   The action ID
+   *   The action ID.
    *
    * @return bool
    *   TRUE if the action exists, FALSE otherwise.
@@ -157,6 +157,7 @@ abstract class SeemDisplayFormBase extends EntityForm {
       $this->plugin->submitConfigurationForm($form, $form_state);
     }
   }
+
   /**
    * {@inheritdoc}
    */
@@ -181,7 +182,7 @@ abstract class SeemDisplayFormBase extends EntityForm {
           '%label' => $seem_display->label(),
         ]));
     }
-//    $form_state->setRedirectUrl($seem_display->urlInfo('collection'));
+    // $form_state->setRedirectUrl($seem_display->urlInfo('collection'));
   }
 
   /**

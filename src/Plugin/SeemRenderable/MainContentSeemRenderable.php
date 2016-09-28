@@ -21,4 +21,5 @@ class MainContentSeemRenderable extends SeemRenderableBase {
   public function doRenderable($content, SeemDisplayInterface $seem_display) {
     return $seem_display->getMainContent();
   }
+
 }

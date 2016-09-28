@@ -12,8 +12,11 @@ interface SeemDisplayableInterface extends PluginInspectionInterface {
   /**
    * Determines which parameters are context for the selected displayable.
    *
-   * @param $element
+   * @param array $element
+   *   A render element.
+   *
    * @return mixed
+   *   A context.
    */
   public function getContext($element);
 

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\seem\SeemServiceProvider
- */
 
 namespace Drupal\seem;
 
@@ -22,4 +18,5 @@ class SeemServiceProvider extends ServiceProviderBase {
     $definition = $container->getDefinition('menu.link_tree');
     $definition->setClass('Drupal\seem\Menu\SeemMenuLinkTree');
   }
+
 }

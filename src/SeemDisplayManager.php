@@ -11,6 +11,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\seem\Plugin\Discovery\YamlDirectoryDiscoveryDecorator;
+use Drupal\seem\Plugin\SeemDisplayableInterface;
 use Drupal\seem\Plugin\SeemDisplayableManager;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -54,8 +55,9 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
   protected $definitionsBySeemDisplayable;
 
   /**
-   * An alternative cache key which we use to cache Definitions, keyed by
-   * seem_displayable.
+   * An alternative cache key.
+   *
+   * Which we use to cache Definitions, keyed by seem_displayable.
    *
    * @var string
    */
@@ -67,12 +69,12 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend instance to use.
    * @param \Drupal\seem\Plugin\SeemDisplayableManager $seem_displayable_plugin_manager
    *   The seem Displayable plugin manager.
    */
@@ -86,9 +88,8 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
 
     $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
-    
-    $this->discovery = new YamlDirectoryDiscoveryDecorator($this->discovery, $this->getDiscoveryDirectories(), 'seem.display.plugin', 'label');
 
+    $this->discovery = new YamlDirectoryDiscoveryDecorator($this->discovery, $this->getDiscoveryDirectories(), 'seem.display.plugin', 'label');
 
     $this->defaults += array(
       'type' => 'page',
@@ -101,21 +102,27 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     $this->alterInfo('seem_display');
   }
 
-
   /**
    * {@inheritdoc}
    *
-   * @param string
+   * @param CacheBackendInterface $cache_backend
+   *   The cache backend.
+   * @param string $cache_key
    *   Custom cache_key for plugin definitions keyed by seem_displayable.
+   * @param array $cache_tags
+   *   An array of cache tags.
+   * @param \Drupal\seem\Plugin\SeemDisplayableInterface $cache_key_seem_displayable
+   *   The displayable.
    */
-  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = array(), $cache_key_seem_displayable = NULL) {
+  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = array(), SeemDisplayableInterface $cache_key_seem_displayable = NULL) {
     parent::setCacheBackend($cache_backend, $cache_key, $cache_tags);
     $this->cacheKeyBySeemDisplayable = $cache_key_seem_displayable;
   }
 
   /**
-   * Build the directory index, the yaml discovery will use to find the yaml
-   * plugin definitions.
+   * Build the directory index.
+   *
+   * The yaml discovery will use to find the yaml plugin definitions.
    */
   protected function getDiscoveryDirectories() {
     // Define themes as additional plugin source.
@@ -130,8 +137,10 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
   }
 
   /**
-   * Determines if the provider of a definition exists. Since we support themes
-   * and modules as a provider, we need to check both sources.
+   * Determines if the provider of a definition exists.
+   *
+   * Since we support themes and modules as a provider, we need to check both
+   * sources.
    *
    * @return bool
    *   TRUE if provider exists, FALSE otherwise.
@@ -160,15 +169,14 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    // @todo: Find a better way to do this. Maybe the seem_displayable should
-    //        know this.
+    // @todo: Find a better way to do this. Maybe the seem_displayable should know this.
     if (isset($definition['_discovered_file_path'])) {
       $basename = basename($definition['_discovered_file_path']);
       $basename_fragments = explode('.seem_display.yml', $basename);
       $basename_fragments = explode('.', $basename_fragments[0]);
       $count = count($basename_fragments);
-      $definition['seem_displayable'] = $basename_fragments[$count-1];
-      $basename_fragments = explode('.' . $basename_fragments[$count-1] . '.seem_display.yml', $basename);
+      $definition['seem_displayable'] = $basename_fragments[$count - 1];
+      $basename_fragments = explode('.' . $basename_fragments[$count - 1] . '.seem_display.yml', $basename);
       $definition['id'] = $basename_fragments[0];
     }
 
@@ -178,7 +186,7 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     if (isset($definition['context']['path']) && !isset($definition['context']['route'])) {
       $definition['path'] = $definition['context']['path'];
       unset($definition['context']['path']);
-      $definition['context']['route'] =  "seem.display_" . $definition['id'];
+      $definition['context']['route'] = "seem.display_" . $definition['id'];
     }
 
     // @todo: Get context dependencies from seem_displayable.
@@ -188,6 +196,17 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     }
   }
 
+  /**
+   * Get the definition by context.
+   *
+   * @param mixed $context
+   *   The context.
+   * @param string $seem_displayable_plugin_id
+   *   The plugin id.
+   *
+   * @return bool|mixed
+   *   A definition or FALSE.
+   */
   public function getDefinitionByContext($context, $seem_displayable_plugin_id = NULL) {
     if ($seem_displayable_plugin_id) {
       $definitions = $this->getDefinitionsBySeemDisplayable($seem_displayable_plugin_id);
@@ -201,22 +220,90 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
         return $definition;
       }
     }
-
     return FALSE;
   }
 
+  /**
+   * Recursive find.
+   *
+   * @param array $array
+   *   An array of found items.
+   * @param string $needle
+   *   A string to search for.
+   *
+   * @return array
+   *   An array of the items found.
+   */
   public function recursiveFind(array $array, $needle) {
     $iterator  = new RecursiveArrayIterator($array);
     $recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
-    $aHitList = array();
+    $items = array();
     foreach ($recursive as $key => $value) {
       if ($key === $needle) {
-        array_push($aHitList, $value);
+        array_push($items, $value);
       }
     }
-    return $aHitList;
+    return $items;
   }
-//
+
+  /**
+   * Returns plugin definitions of the decorated discovery class.
+   *
+   * Grouped by a given seem_displayable plugin_id.
+   *
+   * @param string $seem_displayable_plugin_id
+   *   The seem_displayable plugin id.
+   *
+   * @return array|null
+   *   An array of plugin definitions.
+   */
+  public function getDefinitionsBySeemDisplayable($seem_displayable_plugin_id) {
+    $definitions_by_seem_displayable = $this->getCachedDefinitionsBySeemDisplayable($seem_displayable_plugin_id);
+    if (!isset($definitions_by_seem_displayable)) {
+      $definitions = $this->getDefinitions();
+      $definitions_by_seem_displayable = [];
+      foreach ($definitions as $plugin_id => $plugin_definition) {
+        // @todo: THIS MUST BE CACHED FOR getDefinitions TOO!
+        $plugin_definition['original_plugin_id'] = $plugin_id;
+        $definitions_by_seem_displayable[$plugin_definition['seem_displayable']][$plugin_definition['id']] = $plugin_definition;
+      }
+      $this->setCachedDefinitionsBySeemDisplayable($definitions_by_seem_displayable);
+      return isset($definitions_by_seem_displayable[$seem_displayable_plugin_id]) ? $definitions_by_seem_displayable[$seem_displayable_plugin_id] : [];
+    }
+    return $definitions_by_seem_displayable;
+  }
+
+  /**
+   * Returns the cached plugin definitions of the decorated discovery class.
+   *
+   * Grouped by seem_displayable plugin_id.
+   *
+   * @param string $seem_displayable_plugin_id
+   *   The seem_displayable plugin id.
+   *
+   * @return array|null
+   *   On success this will return an array of plugin definitions.
+   */
+  protected function getCachedDefinitionsBySeemDisplayable($seem_displayable_plugin_id) {
+    if (!isset($this->definitionsBySeemDisplayable) && $cache = $this->cacheGet($this->cacheKeyBySeemDisplayable)) {
+      $this->definitionsBySeemDisplayable = $cache->data;
+    }
+    return isset($this->definitionsBySeemDisplayable[$seem_displayable_plugin_id]) ? $this->definitionsBySeemDisplayable[$seem_displayable_plugin_id] : NULL;
+  }
+
+  /**
+   * Sets a cache of plugin definitions for the decorated discovery class.
+   *
+   * Grouped by seem_displayable plugin_id.
+   *
+   * @param array $definitions_by_seem_displayable
+   *   List of definitions to store in cache.
+   */
+  protected function setCachedDefinitionsBySeemDisplayable($definitions_by_seem_displayable) {
+    $this->cacheSet($this->cacheKeyBySeemDisplayable, $definitions_by_seem_displayable, Cache::PERMANENT, $this->cacheTags);
+    $this->definitionsBySeemDisplayable = $definitions_by_seem_displayable;
+  }
+
 //  function searchArray($array, $key, $value) {
 //    $results = array();
 //
@@ -240,58 +327,5 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
 ////    return $this->getDefinitions();
 //    return $definitions;
 //  }
-
-  /**
-   * Returns plugin definitions of the decorated discovery class, grouped by a
-   * given seem_displayable plugin_id.
-   *
-   * @param $seem_displayable_plugin_id
-   *   The seem_displayable plugin id.
-   * @return array|null
-   *   An array of plugin definitions.
-   */
-  public function getDefinitionsBySeemDisplayable($seem_displayable_plugin_id) {
-    $definitions_by_seem_displayable = $this->getCachedDefinitionsBySeemDisplayable($seem_displayable_plugin_id);
-    if (!isset($definitions_by_seem_displayable)) {
-      $definitions = $this->getDefinitions();
-      $definitions_by_seem_displayable = [];
-      foreach ($definitions as $plugin_id => $plugin_definition) {
-        // @todo: THIS MUST BE CACHED FOR getDefinitions TOO!
-        $plugin_definition['original_plugin_id'] = $plugin_id;
-        $definitions_by_seem_displayable[$plugin_definition['seem_displayable']][$plugin_definition['id']] = $plugin_definition;
-      }
-      $this->setCachedDefinitionsBySeemDisplayable($definitions_by_seem_displayable);
-      return isset($definitions_by_seem_displayable[$seem_displayable_plugin_id]) ? $definitions_by_seem_displayable[$seem_displayable_plugin_id] : [];
-    }
-    return $definitions_by_seem_displayable;
-  }
-
-  /**
-   * Returns the cached plugin definitions of the decorated discovery class,
-   * grouped by seem_displayable plugin_id.
-   *
-   * @param $seem_displayable_plugin_id
-   *   The seem_displayable plugin id.
-   * @return array|null
-   *   On success this will return an array of plugin definitions.
-   */
-  protected function getCachedDefinitionsBySeemDisplayable($seem_displayable_plugin_id) {
-    if (!isset($this->definitionsBySeemDisplayable) && $cache = $this->cacheGet($this->cacheKeyBySeemDisplayable)) {
-      $this->definitionsBySeemDisplayable = $cache->data;
-    }
-    return isset($this->definitionsBySeemDisplayable[$seem_displayable_plugin_id]) ? $this->definitionsBySeemDisplayable[$seem_displayable_plugin_id] : NULL;
-  }
-
-  /**
-   * Sets a cache of plugin definitions for the decorated discovery class,
-   * grouped by seem_displayable plugin_id.
-   *
-   * @param array $definitions_by_seem_displayable
-   *   List of definitions to store in cache.
-   */
-  protected function setCachedDefinitionsBySeemDisplayable($definitions_by_seem_displayable) {
-    $this->cacheSet($this->cacheKeyBySeemDisplayable, $definitions_by_seem_displayable, Cache::PERMANENT, $this->cacheTags);
-    $this->definitionsBySeemDisplayable = $definitions_by_seem_displayable;
-  }
 
 }

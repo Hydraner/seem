@@ -2,9 +2,7 @@
 
 namespace Drupal\seem\Plugin\SeemRenderable;
 
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Block\BlockManager;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -20,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Markup")
  * )
  */
-class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerFactoryPluginInterface{
+class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerFactoryPluginInterface {
 
   /**
    * The block manager.
@@ -91,4 +89,5 @@ class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerF
     // ::getCacheContexts methods.
     return $plugin_block->build();
   }
+
 }

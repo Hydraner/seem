@@ -20,7 +20,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * The seem_display plugin manager.
    *
-   * @var \Drupal\seem\SeemDisplayManagerInterface.
+   * @var \Drupal\seem\SeemDisplayManagerInterface
    */
   protected $seemDisplayManager;
 
@@ -43,8 +43,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   }
 
   /**
-   * Collect and create routes from the seem displays for the displayable type
-   * 'page'.
+   * Collect and create routes from seem displays for displayable type 'page'.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection.
@@ -65,7 +64,7 @@ class RouteSubscriber extends RouteSubscriberBase {
             '_title' => (string) $definition['label'],
 
             'base_route_name' => $definition['context']['route'],
-            'seem_display' => $definition
+            'seem_display' => $definition,
           ],
           $requirements,
           [
@@ -80,8 +79,9 @@ class RouteSubscriber extends RouteSubscriberBase {
   }
 
   /**
-   * Collect route overrides for the seem display type 'page' and add them to the
-   * existing routes.
+   * Collect route overrides for the seem display type 'page'.
+   *
+   * And add them to the existing routes.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection.
@@ -97,14 +97,14 @@ class RouteSubscriber extends RouteSubscriberBase {
           ]);
           $route->setRequirement('_access', 'TRUE');
         }
-        else if ($definition['response'] == 403) {
+        elseif ($definition['response'] == 403) {
           $route->setDefaults([
             '_controller' => '\Drupal\system\Controller\Http4xxController:on403',
             '_title' => 'Access denied',
           ]);
           $route->setRequirement('_access', 'TRUE');
         }
-        else if ($definition['response'] == 401) {
+        elseif ($definition['response'] == 401) {
           $route->setDefaults([
             '_controller' => '\Drupal\system\Controller\Http4xxController:on401',
             '_title' => 'Unauthorized',
@@ -137,7 +137,8 @@ class RouteSubscriber extends RouteSubscriberBase {
    *   A path string.
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The collection holding all the routes we are searching in for the path.
-   * @return string $route_name
+   *
+   * @return string
    *   The route name if it exists.
    */
   protected function findRouteName($path, RouteCollection $collection) {
