@@ -39,10 +39,10 @@ use Drupal\seem\Plugin\SeemDisplay\SeemDisplayBase;
  */
 class SeemDisplayExampleTest extends SeemDisplayBase {
 
-  function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $debug = 1;
-  }
+//  function __construct(array $configuration, $plugin_id, $plugin_definition, $layout_manager) {
+//    parent::__construct($configuration, $plugin_id, $plugin_definition, $seem_renderable_manager, $layout_manager);
+//    $debug = 1;
+//  }
 
   /**
    * {@inheritdoc}
