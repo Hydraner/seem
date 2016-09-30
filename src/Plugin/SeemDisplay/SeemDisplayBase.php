@@ -3,13 +3,10 @@
 namespace Drupal\seem\Plugin\SeemDisplay;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\Url;
 use Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface;
 use Drupal\seem\Plugin\SeemRenderableManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -256,10 +253,9 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 
     // Add the display information to the build array for later usage if needed.
     $build['#display'] = $this->getPluginDefinition();
+
     // Add display specific configuration link.
-    // @todo: We need to append this also if their is no content regions like in
-    // custom layouts for instance.
-    $build['content'][] = $this->addDisplayConfigurationLink();
+    $this->addContextualLinks($build);
 
     return $build;
   }
@@ -270,10 +266,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    * This only needs to be done in a page/existing_page context.
    */
   public function pageBuild($build) {
-    // @todo: Reuse processRegion.
     foreach ($this->getExistingRegionsDefinition() as $region_key => $region_definition) {
       $build[$region_key] = $this->processRegion($region_definition, $region_key, $build);
-      // .
     }
     return $build;
   }
@@ -289,17 +283,17 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   }
 
   /**
-   * Add a display configuration link.
+   * Adds the configure display link to the build array.
    *
-   * @return array
-   *   An array with some markup.
+   * @param array $build
+   *   A build array.
    */
-  public function addDisplayConfigurationLink() {
-    // @todo: Add configuration link with context @see https://www.previousnext.com.au/blog/understanding-drupal-8s-modal-api-and-dialog-controller
-    // @todo: Get config entity for context. Use parameters and display for context.
-    // @todo: Context per plugin. this just works for entities.
+  public function addContextualLinks(&$build) {
 
     if (isset($this->pluginDefinition['context'])) {
+      $build['#attributes']['class'][] = 'seem-region';
+      // @todo: Get config entity for context. Use parameters and display for context.
+      // @todo: Context per plugin. this just works for entities.
       $parameters = \Drupal::routeMatch()->getRawParameters()->all();
       $display = $this->getPluginDefinition();
       $query = \Drupal::entityQuery('seem_display');
@@ -316,38 +310,25 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $seem_display_id = $query->execute();
       $entity_id = !empty($seem_display_id) ? key($query->execute()) : '';
       if (!empty($entity_id)) {
-        $type = 'edit_form';
+        $route_name = 'entity.seem_display.edit_form';
       }
       else {
-        $type = 'add_form';
+        $route_name = 'entity.seem_display.add_form';
       }
 
-      $link_url = Url::fromRoute(
-        'entity.seem_display.' . $type,
-        array(
-          'seem_display' => $entity_id,
-          'parameters' => Json::encode($parameters),
-          'display' => Json::encode(['display' => $display]),
-        )
+      $build['#contextual_links'] = array(
+        'seem' => array(
+          'route_parameters' => ['seem_display' => $entity_id],
+          'metadata' => [
+            'parameters' => $parameters,
+            'display' => $display,
+            'route' => $route_name
+          ]
+        ),
       );
-      $link_url->setOptions(
-        array(
-          'attributes' => array(
-            'class' => array('use-ajax'),
-            'data-dialog-type' => 'modal',
-            'data-dialog-options' => Json::encode(
-              array(
-                'width' => 700,
-              )
-            ),
-          ),
-        )
-      );
-      // Magic link.
-      // @todo: We need better UX for that.
-      return [
-        '#markup' => Link::fromTextAndUrl('Display configuration', $link_url),
-      ];
+
+      $layout = $this->layoutManager->createInstance('seem_wrapper', []);
+      $build = $layout->build($build);
     }
   }
 

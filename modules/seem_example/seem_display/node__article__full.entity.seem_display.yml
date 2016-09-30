@@ -6,7 +6,7 @@ layout: 'layout_example_2col'
 context:
   entity_type: 'node'
   bundle: 'article'
-  view_mode: 'full'
+  view_mode: 'default'
 regions:
   left:
     -

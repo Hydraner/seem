@@ -207,3 +207,8 @@ Now reload the page, you will see content in the left and right regions of the
 layout.
 
 ![basic seem example using layout](seem-readme-2.png)
+
+# Additional notes
+In order to be able to use the seem active config, you need to make sure, this
+patch is applyes to your drupal core: 
+https://www.drupal.org/files/issues/core-contextual-ajax-2764931-7.patch

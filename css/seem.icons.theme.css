@@ -1,0 +1,39 @@
+/**
+ * @file
+ * Styling for seem module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-seem:before {
+  background-image: url(../../../../core/misc/icons/bebebe/cog.svg);
+}
+.toolbar-bar .toolbar-icon-seem:active:before,
+.toolbar-bar .toolbar-icon-seem.is-active:before {
+  background-image: url(../../../../core/misc/icons/ffffff/cog.svg);
+}
+
+/**
+ * Seem trigger.
+ */
+.seem-region .contextual .trigger {
+  background-image: url(../../../../core/misc/icons/bebebe/cog.svg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  /* Override the .focusable height: auto */
+  height: 26px !important;
+  /* Override the .focusable height: auto */
+  width: 26px !important;
+  text-indent: -9999px;
+}
+
+.seem-region .contextual .trigger:hover {
+  background-image: url(../../../../core/misc/icons/787878/cog.svg);
+}
+
+.seem-region .contextual .trigger:focus {
+  background-image: url(../../../../core/misc/icons/787878/cog.svg);
+  outline: none;
+}

@@ -5,8 +5,10 @@
  * Contains hook implementations and functions for the seem module.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_view_alter().
@@ -75,5 +77,73 @@ function seem_preprocess_views_view(&$variables) {
   // Render title if requested.
   if (isset($view->element['#show_title'])) {
     $variables['title']['#markup'] = $view->getTitle();
+  }
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function seem_toolbar() {
+  $items = [];
+//  $items['contextual'] = [
+//    '#cache' => [
+//      'contexts' => [
+//        'user.permissions',
+//      ],
+//    ],
+//  ];
+//
+//  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+//    return $items;
+//  }
+
+  $items['seem'] = array(
+    '#type' => 'toolbar_item',
+    'tab' => array(
+      '#type' => 'html_tag',
+      '#tag' => 'button',
+      '#value' => t('Seem config'),
+      '#attributes' => array(
+        'class' => array('toolbar-icon', 'toolbar-icon-seem'),
+        'role' => 'button',
+        'aria-pressed' => 'false',
+      ),
+    ),
+    '#wrapper_attributes' => array(
+      'class' => array('hidden', 'seem-toolbar-tab'),
+    ),
+    '#attached' => array(
+      'library' => array(
+        'seem/drupal.seem-toolbar',
+      ),
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_build_HOOK_alter().
+ */
+function seem_block_build_system_main_block_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+  $build['#contextual_links'] = [];
+}
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ */
+function seem_contextual_links_view_alter(&$element, $items) {
+  if (isset($items['seem.display_config'])) {
+    $link = &$element['#links']['seemdisplay-config'];
+    $link['attributes']['class'][] = 'use-ajax';
+    $link['attributes']['data-dialog-type'] = 'modal';
+    $link['attributes']['data-dialog-options'] = Json::encode(array(
+      'width' => 700,
+    ) + ['display' => $items['seem.display_config']['metadata']['display'], 'parameters' =>  $items['seem.display_config']['metadata']['parameters']]);
+
+    $route_name = $items['seem.display_config']['metadata']['route'];
+    $route_parameters = ['seem_display' => $items['seem.display_config']['metadata']['seem_display_id']];
+    $options = Json::encode(['display' => $items['seem.display_config']['metadata']['display'], 'parameters' =>  $items['seem.display_config']['metadata']['parameters']]);
+    $element['#links']['seemdisplay-config']['url'] = Url::fromRoute($route_name, $route_parameters, $options);
   }
 }

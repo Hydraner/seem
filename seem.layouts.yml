@@ -1,0 +1,8 @@
+seem_wrapper:
+  label: Seem wrapper layout
+  description: This layouts assures that the contextual links for seem will be rendered.
+  category: Seem
+  template: templates/seem-wrapper
+  regions:
+    content:
+      label: The content

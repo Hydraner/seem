@@ -1,0 +1,4 @@
+seem.display_config:
+  title: 'Configure display'
+  route_name: 'entity.seem_display.config_form'
+  group: seem

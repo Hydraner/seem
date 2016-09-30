@@ -51,9 +51,9 @@ abstract class SeemDisplayFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $display = Json::decode($_GET['display']);
-    $display = $display['display'];
-    $parameters = Json::decode($_GET['parameters']);
+    $display = $_POST['dialogOptions']['display'];
+//    $display = $display['display'];
+    $parameters = $_POST['dialogOptions']['parameters'];
 
     $seem_displayable = \Drupal::getContainer()
       ->get('plugin.manager.seem_displayable.processor')

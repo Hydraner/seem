@@ -1,0 +1,16 @@
+drupal.seem-toolbar:
+  version: VERSION
+  js:
+    js/seem.toolbar.js: {}
+  css:
+    component:
+      css/seem.toolbar.css: {}
+    theme:
+      css/seem.icons.theme.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/backbone
+    - core/jquery.once
+    - core/drupal.tabbingmanager
+    - core/drupal.announce
