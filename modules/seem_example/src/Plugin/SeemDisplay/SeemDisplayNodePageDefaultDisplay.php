@@ -13,8 +13,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_plugin\Plugin\Layout\LayoutBase;
 use Drupal\seem\Plugin\SeemDisplayBase;
+use Drupal\seem\Plugin\SeemDisplayDefault;
 
-class SeemDisplayNodePageDefaultDisplay extends SeemDisplayBase {
+class SeemDisplayNodePageDefaultDisplay extends SeemDisplayDefault {
 
 
 

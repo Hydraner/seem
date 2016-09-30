@@ -9,6 +9,7 @@ namespace Drupal\seem_example\Plugin\SeemDisplay;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\seem\Plugin\SeemDisplayBase;
+use Drupal\seem\Plugin\SeemDisplayDefault;
 
 /**
  * @todo: Description
@@ -37,7 +38,7 @@ use Drupal\seem\Plugin\SeemDisplayBase;
  *   }
  * )
  */
-class SeemDisplayExampleTest extends SeemDisplayBase {
+class SeemDisplayExampleTest extends SeemDisplayDefault {
 
 //  function __construct(array $configuration, $plugin_id, $plugin_definition, $layout_manager) {
 //    parent::__construct($configuration, $plugin_id, $plugin_definition, $seem_renderable_manager, $layout_manager);
@@ -67,7 +68,7 @@ class SeemDisplayExampleTest extends SeemDisplayBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
