@@ -346,7 +346,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       // Magic link.
       // @todo: We need better UX for that.
       return [
-        '#markup' => Link::fromTextAndUrl('Display configuration', $link_url),
+        '#markup' => Link::fromTextAndUrl('Display configuration', $link_url)->toString(),
       ];
     }
   }
