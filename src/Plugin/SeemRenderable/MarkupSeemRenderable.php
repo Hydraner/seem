@@ -3,7 +3,7 @@
 namespace Drupal\seem\Plugin\SeemRenderable;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
+use Drupal\seem\Plugin\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 
 /**

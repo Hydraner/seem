@@ -2,6 +2,8 @@
 
 namespace Drupal\seem\Plugin\SeemDisplay;
 
+use Drupal\seem\Plugin\SeemDisplayDefault;
+
 /**
  * Provides a 'Display' seem_renderable plugin.
  *

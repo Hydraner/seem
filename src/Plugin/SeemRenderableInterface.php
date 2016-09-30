@@ -3,7 +3,6 @@
 namespace Drupal\seem\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
 
 /**
  * Defines an interface for Seem renderable plugins.
@@ -15,7 +14,7 @@ interface SeemRenderableInterface extends PluginInspectionInterface {
    *
    * @param array $content
    *   The content which needs to be rendered.
-   * @param \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface $seem_display
+   * @param \Drupal\seem\Plugin\SeemDisplayInterface $seem_display
    *   The seem_display definition.
    *
    * @return array

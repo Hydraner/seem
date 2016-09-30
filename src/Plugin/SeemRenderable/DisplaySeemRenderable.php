@@ -3,7 +3,7 @@
 namespace Drupal\seem\Plugin\SeemRenderable;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
+use Drupal\seem\Plugin\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 use Drupal\seem\SeemDisplayManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;

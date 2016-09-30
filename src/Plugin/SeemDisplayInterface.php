@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\seem\Plugin\SeemDisplay;
+namespace Drupal\seem\Plugin;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;

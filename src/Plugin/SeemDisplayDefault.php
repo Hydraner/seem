@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\seem\Plugin\SeemDisplay;
+namespace Drupal\seem\Plugin;
 
 /**
  * Provides a default class for Layout plugins.

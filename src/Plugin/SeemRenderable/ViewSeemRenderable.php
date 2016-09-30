@@ -2,7 +2,7 @@
 
 namespace Drupal\seem\Plugin\SeemRenderable;
 
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
+use Drupal\seem\Plugin\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 use Drupal\views\Views;
 

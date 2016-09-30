@@ -8,7 +8,7 @@
 namespace Drupal\seem_example\Plugin\SeemDisplay;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayBase;
+use Drupal\seem\Plugin\SeemDisplayBase;
 
 /**
  * @todo: Description

@@ -6,7 +6,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
+use Drupal\seem\Plugin\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

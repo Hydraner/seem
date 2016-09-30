@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\seem\Plugin\SeemDisplay;
+namespace Drupal\seem\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface;
-use Drupal\seem\Plugin\SeemRenderableManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

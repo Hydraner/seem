@@ -12,7 +12,7 @@ use Drupal\Core\StringTranslation;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_plugin\Plugin\Layout\LayoutBase;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayBase;
+use Drupal\seem\Plugin\SeemDisplayBase;
 
 class SeemDisplayNodePageDefaultDisplay extends SeemDisplayBase {
 

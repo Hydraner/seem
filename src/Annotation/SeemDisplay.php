@@ -11,9 +11,9 @@ use Drupal\Component\Annotation\Plugin;
  *
  * Plugin namespace: Plugin\SeemDisplay
  *
- * @see \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface
- * @see \Drupal\seem\Plugin\SeemDisplay\SeemDisplayBase
- * @see \Drupal\seem\Plugin\SeemDisplay\SeemDisplayPluginManager
+ * @see \Drupal\seem\Plugin\SeemDisplayInterface
+ * @see \Drupal\seem\Plugin\SeemDisplayBase
+ * @see \Drupal\seem\Plugin\SeemDisplayPluginManager
  * @see plugin_api
  *
  * @Annotation

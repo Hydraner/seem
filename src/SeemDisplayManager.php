@@ -79,7 +79,7 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
    *   The seem Displayable plugin manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, SeemDisplayableManager $seem_displayable_plugin_manager) {
-    $plugin_interface = 'Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface';
+    $plugin_interface = 'Drupal\seem\Plugin\SeemDisplayInterface';
     $plugin_definition_annotation_name = 'Drupal\seem\Annotation\SeemDisplay';
     parent::__construct("Plugin/SeemDisplay", $namespaces, $module_handler, $plugin_interface, $plugin_definition_annotation_name);
     $this->seemDisplayablePluginManager = $seem_displayable_plugin_manager;
@@ -95,7 +95,7 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
       'type' => 'page',
       // Used for plugins defined in layouts.yml that do not specify a class
       // themselves.
-      'class' => 'Drupal\seem\Plugin\SeemDisplay\SeemDisplayDefault',
+      'class' => 'Drupal\seem\Plugin\SeemDisplayDefault',
     );
 
     $this->setCacheBackend($cache_backend, 'seem_display');
@@ -129,6 +129,7 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     $directories = array_merge($this->moduleHandler->getModuleDirectories(), $this->themeHandler->getThemeDirectories());
 
     // Make the discovery search in /seem_display directory.
+    // @todo: Make this search recusively.
     foreach ($directories as &$directory) {
       $directory = $directory . '/seem_display';
     }

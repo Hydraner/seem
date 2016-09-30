@@ -6,7 +6,7 @@ use Drupal\Core\Block\BlockManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
+use Drupal\seem\Plugin\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

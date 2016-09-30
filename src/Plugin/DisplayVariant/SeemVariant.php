@@ -93,7 +93,7 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
    * main_content into the responsible display_variant.
    */
   public function build() {
-    /** @var \Drupal\seem\Plugin\SeemDisplay\SeemDisplayBase $seem_display */
+    /** @var \Drupal\seem\Plugin\SeemDisplayBase $seem_display */
     $seem_display = $this->seemDisplayManager->createInstance($this->configuration['seem_display']['id']);
     // Use the display_variant's main content to be able to place it in a custom
     // region via a custom seem display.
