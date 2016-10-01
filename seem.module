@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
@@ -124,26 +125,37 @@ function seem_toolbar() {
 
 /**
  * Implements hook_block_build_HOOK_alter().
+ *
+ * Set an empty #contextual_links key for the system_main_block in order to
+ * prevent it from producing an error when trying to merge our #contextual_links
+ * with an empty array.
+ *
+ * {@inheritdoc}
  */
-function seem_block_build_system_main_block_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+function seem_block_build_system_main_block_alter(array &$build, BlockPluginInterface $block) {
   $build['#contextual_links'] = [];
 }
 
 /**
  * Implements hook_contextual_links_view_alter().
+ *
+ * {@inheritdoc}
  */
 function seem_contextual_links_view_alter(&$element, $items) {
   if (isset($items['seem.display_config'])) {
     $link = &$element['#links']['seemdisplay-config'];
+    // Make the link use a modal.
     $link['attributes']['class'][] = 'use-ajax';
     $link['attributes']['data-dialog-type'] = 'modal';
-    $link['attributes']['data-dialog-options'] = Json::encode(array(
+    $link['attributes']['data-dialog-options'] = Json::encode([
       'width' => 700,
-    ) + ['display' => $items['seem.display_config']['metadata']['display'], 'parameters' =>  $items['seem.display_config']['metadata']['parameters']]);
-
+      'parameters' => $items['seem.display_config']['metadata']['parameters'],
+      'context' => $items['seem.display_config']['metadata']['context'],
+      'plugin_id' => $items['seem.display_config']['metadata']['plugin_id']
+    ]);
+    // Rebuild the link.
     $route_name = $items['seem.display_config']['metadata']['route'];
-    $route_parameters = ['seem_display' => $items['seem.display_config']['metadata']['seem_display_id']];
-    $options = Json::encode(['display' => $items['seem.display_config']['metadata']['display'], 'parameters' =>  $items['seem.display_config']['metadata']['parameters']]);
-    $element['#links']['seemdisplay-config']['url'] = Url::fromRoute($route_name, $route_parameters, $options);
+    $route_parameters = $items['seem.display_config']['route_parameters'];
+    $element['#links']['seemdisplay-config']['url'] = Url::fromRoute($route_name, $route_parameters, []);
   }
 }

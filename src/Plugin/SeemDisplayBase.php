@@ -3,6 +3,7 @@
 namespace Drupal\seem\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -51,6 +52,13 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   protected $seemRenderableManager;
 
   /**
+   * The seem displayable plugin manager.
+   *
+   * @var \Drupal\seem\Plugin\SeemDisplayableManager
+   */
+  protected $seemDisplayableManager;
+
+  /**
    * The layout manager.
    *
    * @var \Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface
@@ -68,11 +76,21 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    *   The plugin implementation definition.
    * @param \Drupal\seem\Plugin\SeemRenderableManager $seem_renderable_manager
    *   The seem renderable plugin manager.
+   * @param \Drupal\seem\Plugin\SeemDisplayableManager $seem_displayable_manager
+   *   The seem displayable plugin manager.
    * @param \Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface $layout_manager
    *   Layout manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SeemRenderableManager $seem_renderable_manager, LayoutPluginManagerInterface $layout_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    SeemRenderableManager $seem_renderable_manager,
+    SeemDisplayableManager $seem_displayable_manager,
+    LayoutPluginManagerInterface $layout_manager
+  ) {
     $this->seemRenderableManager = $seem_renderable_manager;
+    $this->seemDisplayableManager = $seem_displayable_manager;
     $this->layoutManager = $layout_manager;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -83,12 +101,18 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $container->get('plugin.manager.seem_renderable.processor'),
+      $container->get('plugin.manager.seem_displayable.processor'),
       $container->get('plugin.manager.layout_plugin')
     );
   }
@@ -296,6 +320,11 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $parameters = \Drupal::routeMatch()->getRawParameters()->all();
       $display = $this->getPluginDefinition();
       $query = \Drupal::entityQuery('seem_display');
+
+      /** @var \Drupal\seem\Plugin\SeemDisplayableInterface $seem_displayable */
+      $seem_displayable = $this->seemDisplayableManager->createInstance($display['seem_displayable']);
+      $parameters = $seem_displayable->getConfigContext($display['context']);
+
       foreach ($parameters as $key => $value) {
         $query->condition("parameters.$key", $value);
       }
@@ -319,8 +348,9 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
         'seem' => array(
           'route_parameters' => ['seem_display' => $entity_id],
           'metadata' => [
-            'parameters' => $parameters,
-            'display' => $display,
+            'parameters' => Json::encode($parameters),
+            'context' => Json::encode($display['context']),
+            'plugin_id' => $display['type'],
             'route' => $route_name
           ]
         ),

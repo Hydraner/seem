@@ -21,6 +21,13 @@ abstract class SeemDisplayableBase extends PluginBase implements SeemDisplayable
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getConfigContext($display_context) {
+    return $display_context;
+  }
+
+  /**
    * Form constructor.
    *
    * Plugin forms are embedded in other forms. In order to know where the plugin

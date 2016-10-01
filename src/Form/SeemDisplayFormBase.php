@@ -51,17 +51,27 @@ abstract class SeemDisplayFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $display = $_POST['dialogOptions']['display'];
-//    $display = $display['display'];
-    $parameters = $_POST['dialogOptions']['parameters'];
+    if (isset($_POST['dialogOptions']) && isset($_POST['dialogOptions']['plugin_id'])) {
+      $parameters = $_POST['dialogOptions']['parameters'];
+      $context = $_POST['dialogOptions']['context'];
+      $plugin_id = $_POST['dialogOptions']['plugin_id'];
 
-    $seem_displayable = \Drupal::getContainer()
-      ->get('plugin.manager.seem_displayable.processor')
-      ->createInstance($display['seem_displayable']);
-    // @todo: User LazyPluginCollection
-    $this->plugin = $seem_displayable;
-    $this->entity->set('context', $display['context']);
-    $this->entity->set('parameters', $parameters);
+      $seem_displayable = \Drupal::getContainer()
+        ->get('plugin.manager.seem_displayable.processor')
+        ->createInstance($plugin_id);
+      // @todo: User LazyPluginCollection
+      $this->plugin = $seem_displayable;
+
+      $form_state->setUserInput($form_state->getUserInput() + [
+        'plugin' => $plugin_id,
+        'context' => $context,
+        'parameters' => $parameters
+      ]);
+//
+//      $form_state->setValue('plugin', $plugin_id);
+//      $form_state->setValue('context', $context);
+//      $form_state->setValue('parameters', $parameters);
+    }
     return parent::buildForm($form, $form_state);
   }
 
@@ -88,28 +98,34 @@ abstract class SeemDisplayFormBase extends EntityForm {
         'exists' => array($this, 'exists'),
       ),
     );
-//    $form['plugin'] = array(
-//      '#type' => 'value',
-//      '#value' => $this->entity->get('plugin'),
-//    );
-//    $form['type'] = array(
-//      '#type' => 'value',
-//      '#value' => $this->entity->getType(),
-//    );
-
-    $form += $this->plugin->buildConfigurationForm($form, $form_state);
-
-    $form['config_keys'] = [
+    $input = $form_state->getUserInput();
+    $form['plugin'] = array(
       '#type' => 'hidden',
-      '#value' => isset($form['config']) ? array_keys($form['config']) : [],
-    ];
+      '#value' => $input['plugin'],
+    );
+    $form['context'] = array(
+      '#type' => 'hidden',
+      '#value' => $input['context'],
+    );
+    $form['parameters'] = array(
+      '#type' => 'hidden',
+      '#value' => $input['parameters'],
+    );
 
-    if (!$this->entity->isNew()) {
-      foreach ($this->entity->get('config') as $config => $value) {
-        $form['config'][$config]['#default_value'] = $value;
+    if ($this->plugin) {
+      $form += $this->plugin->buildConfigurationForm($form, $form_state);
+
+      $form['config_keys'] = [
+        '#type' => 'hidden',
+        '#value' => isset($form['config']) ? array_keys($form['config']) : [],
+      ];
+
+      if (!$this->entity->isNew()) {
+        foreach ($this->entity->get('config') as $config => $value) {
+          $form['config'][$config]['#default_value'] = $value;
+        }
       }
     }
-
     return parent::form($form, $form_state);
   }
 
@@ -164,10 +180,15 @@ abstract class SeemDisplayFormBase extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $seem_display = $this->entity;
     $data = [];
-    foreach ($form['config_keys']['#value'] as $delta => $key) {
-      $data[$key] = $form_state->getValue($key);
+    if (isset($form['config_keys'])) {
+      foreach ($form['config_keys']['#value'] as $delta => $key) {
+        $data[$key] = $form_state->getValue($key);
+      }
+      $seem_display->set('config', $data);
     }
-    $seem_display->set('config', $data);
+    $seem_display->set('parameters', Json::decode($form_state->getValue('parameters')));
+    $seem_display->set('context', Json::decode($form_state->getValue('context')));
+    $seem_display->set('plugin', $form_state->getValue('plugin'));
     $status = $seem_display->save();
 
     switch ($status) {
