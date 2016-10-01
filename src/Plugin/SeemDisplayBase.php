@@ -350,7 +350,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
           'metadata' => [
             'parameters' => Json::encode($parameters),
             'context' => Json::encode($display['context']),
-            'plugin_id' => $display['type'],
+            'plugin_id' => $display['seem_displayable'],
             'route' => $route_name
           ]
         ),
