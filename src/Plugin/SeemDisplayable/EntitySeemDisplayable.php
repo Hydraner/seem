@@ -15,43 +15,33 @@ use Drupal\seem\Plugin\SeemDisplayableBase;
 class EntitySeemDisplayable extends SeemDisplayableBase {
 
   /**
-   * The context.
+   * The entities id.
    *
-   * @var mixed
+   * @var int
    */
-  protected $context;
+  protected $entityId;
 
   /**
    * {@inheritdoc}
    */
   public function getContext($element) {
-    $this->context = [
+    $entity = $element['#main_content']['#' . $element['#entity_type']];
+    $this->entityId = $entity->id();
+
+    return [
       'entity_type' => $element['#entity_type'],
       'bundle' => $element['#bundle'],
       'view_mode' => $element['#view_mode'],
     ];
-    return $this->context;
   }
 
   /**
-   * Get config context.
-   *
-   * @param array $element
-   *   The render element.
-   *
-   * @return array|mixed
-   *   The config context.
-   *
-   * @todo: Make this work. does it?
+   * {@inheritdoc}
    */
-  public function getConfigContext($element) {
-    $this->context = [
-      'entity_type' => $element['#entity_type'],
-      'bundle' => $element['#bundle'],
-      'view_mode' => $element['#view_mode'],
-      'entity_id' => $element['#entity_id'],
+  public function getConfigContext($display_context) {
+    return $display_context + [
+      'entity_id' => $this->entityId
     ];
-    return $this->context;
   }
 
 }

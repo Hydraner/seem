@@ -25,7 +25,7 @@ class PageSeemDisplayable extends SeemDisplayableBase implements ContainerFactor
   protected $routeMatch;
 
   /**
-   * Creates a LocalTasksBlock instance.
+   * Creates a PageSeemDisplayable instance.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -36,7 +36,12 @@ class PageSeemDisplayable extends SeemDisplayableBase implements ContainerFactor
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    RouteMatchInterface $route_match
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
   }
@@ -44,7 +49,12 @@ class PageSeemDisplayable extends SeemDisplayableBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
@@ -58,7 +68,6 @@ class PageSeemDisplayable extends SeemDisplayableBase implements ContainerFactor
    */
   public function getConfigContext($display_context) {
     $path = $this->routeMatch->getRouteObject()->getPath();
-
     return $display_context + ['path' => $path];
   }
 

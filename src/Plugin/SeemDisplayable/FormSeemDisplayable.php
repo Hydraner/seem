@@ -19,27 +19,26 @@ class FormSeemDisplayable extends SeemDisplayableBase {
   use StringTranslationTrait;
 
   /**
+   * The forms id.
+   *
+   * @var string
+   */
+  protected $formId;
+
+  /**
    * {@inheritdoc}
    */
   public function getContext($element) {
+    $this->formId = $element['#form_id'];
     return ['form_id' => $element['#form_id']];
   }
 
   /**
-   * Get config context.
-   *
-   * @param array $element
-   *   A render element.
-   *
-   * @return array
-   *   A config context.
-   *
-   * @todo: make this work.
+   * {@inheritdoc}
    */
-  public function getConfigContext($element) {
-    return [
-      'form_id' => $element['#form_id'],
-      'route' => '',
+  public function getConfigContext($display_context) {
+    return $display_context + [
+      'form_id' => $this->formId,
     ];
   }
 

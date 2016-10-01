@@ -112,7 +112,11 @@ abstract class SeemDisplayFormBase extends EntityForm {
       '#value' => $input['parameters'],
     );
 
-    if ($this->plugin) {
+    if (!$this->plugin) {
+      $this->plugin = \Drupal::getContainer()
+        ->get('plugin.manager.seem_displayable.processor')
+        ->createInstance($input['plugin']);
+    }
       $form += $this->plugin->buildConfigurationForm($form, $form_state);
 
       $form['config_keys'] = [
@@ -125,7 +129,6 @@ abstract class SeemDisplayFormBase extends EntityForm {
           $form['config'][$config]['#default_value'] = $value;
         }
       }
-    }
     return parent::form($form, $form_state);
   }
 
@@ -180,12 +183,10 @@ abstract class SeemDisplayFormBase extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $seem_display = $this->entity;
     $data = [];
-    if (isset($form['config_keys'])) {
-      foreach ($form['config_keys']['#value'] as $delta => $key) {
-        $data[$key] = $form_state->getValue($key);
-      }
-      $seem_display->set('config', $data);
+    foreach ($form['config_keys']['#value'] as $delta => $key) {
+      $data[$key] = $form_state->getValue($key);
     }
+    $seem_display->set('config', $data);
     $seem_display->set('parameters', Json::decode($form_state->getValue('parameters')));
     $seem_display->set('context', Json::decode($form_state->getValue('context')));
     $seem_display->set('plugin', $form_state->getValue('plugin'));
