@@ -263,10 +263,10 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
 
     // Process layout if available.
     if ($this->layout) {
-      $build = $this->processLayout($regions, $this->layout, $this->layoutSettings);
+      $build['content'] = $this->processLayout($regions, $this->layout, $this->layoutSettings);
     }
     else {
-      $build = $regions;
+      $build['content'] = $regions;
     }
 
     // If no region was set, we will fallback to the main content.
