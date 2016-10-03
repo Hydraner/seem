@@ -211,7 +211,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       if ($this->seemRenderableManager->hasDefinition($content['type'])) {
         // Create an seemRenderable instance for the given region.
         $seem_renderable = $this->seemRenderableManager->createInstance($content['type'], ['region_key' => $region_key]);
-        $region[] = $seem_renderable->doRenderable($content, $this);
+        $config = array_merge($seem_renderable->defaultConfiguration(), $content);
+        $region[] = $seem_renderable->doRenderable($config, $this);
         if (!empty($build)) {
           $seem_renderable->doExtraTasks($build);
         }

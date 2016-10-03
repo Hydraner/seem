@@ -59,11 +59,23 @@ class MenuSeemRenderable extends SeemRenderableBase implements ContainerFactoryP
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return [
+      'min_depth' => 1,
+      'max_depth' => 10,
+    ] + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function doRenderable($content, SeemDisplayInterface $seem_display) {
     $menu_name = $content['menu_name'];
 
     // Build the typical default set of menu tree parameters.
     $parameters = $this->menuLinkTree->getCurrentRouteMenuTreeParameters($menu_name);
+    $parameters->setMinDepth($content['min_depth']);
+    $parameters->setMaxDepth($content['max_depth']);
 
     // Load the tree based on this set of parameters.
     $tree = $this->menuLinkTree->load($menu_name, $parameters);

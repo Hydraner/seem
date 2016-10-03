@@ -33,4 +33,12 @@ abstract class SeemRenderableBase extends PluginBase implements SeemRenderableIn
    */
   public function doExtraTasks(&$build) {}
 
+  /**
+   * Define default configuration to have the possibility to create
+   * soft-dependency settings.
+   */
+  public function defaultConfiguration() {
+    return [];
+  }
+
 }
