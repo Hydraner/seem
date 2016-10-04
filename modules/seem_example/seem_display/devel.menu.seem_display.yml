@@ -1,0 +1,8 @@
+label: "Devel menu"
+context:
+  menu_name: 'devel'
+layout: 'empties-navigation-centered'
+regions:
+  menu:
+    -
+      type: main_content
