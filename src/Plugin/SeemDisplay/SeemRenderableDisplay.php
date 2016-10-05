@@ -15,7 +15,7 @@ use Drupal\seem\Plugin\SeemDisplayDefault;
  * @see \Drupal\seem\Plugin\SeemRenderable\DisplaySeemRenderable::doRenderable
  *
  * @SeemDisplay(
- *   id = "renderarble_display",
+ *   id = "renderable_display",
  *   admin_label = @Translation("Renderable display"),
  *   label = @Translation("Renderable display"),
  *   seem_displayable = "display",

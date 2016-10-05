@@ -84,7 +84,7 @@ class DisplaySeemRenderable extends SeemRenderableBase implements ContainerFacto
   public function doRenderable($content, SeemDisplayInterface $seem_display) {
     $seem_displayable = $this->seemDisplayableManager->createInstance('display');
     /** @var \Drupal\seem\Plugin\SeemDisplayInterface $renderable_seem_display */
-    $renderable_seem_display = $this->seemDisplayManager->createInstance('renderarble_display');
+    $renderable_seem_display = $this->seemDisplayManager->createInstance('renderable_display');
     $renderable_seem_display->setMainContent($seem_display->getMainContent());
     $renderable_seem_display->setSeemDisplayable($seem_displayable);
     if (isset($content['layout'])) {
