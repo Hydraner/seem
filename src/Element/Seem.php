@@ -106,6 +106,7 @@ class Seem extends RenderElement implements ContainerFactoryPluginInterface {
 
         /** @var \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface $seem_display */
         $seem_display = $this->seemDisplayPluginManager->createInstance($seem_display_definition['id']);
+        $seem_display->setSeemDisplayable($seem_displayable);
         $seem_display->setMainContent($element['#main_content']);
 
         return $seem_display->build();

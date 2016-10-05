@@ -39,6 +39,7 @@ class EntitySeemDisplayable extends SeemDisplayableBase {
    * {@inheritdoc}
    */
   public function getConfigContext($display_context) {
+    $debug = 1;
     return $display_context + [
       'entity_id' => $this->entityId
     ];

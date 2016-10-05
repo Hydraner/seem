@@ -59,6 +59,13 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   protected $seemDisplayableManager;
 
   /**
+   * The seem displayable plugin instance which is related to the display.
+   *
+   * @var \Drupal\seem\Plugin\SeemDisplayableBase
+   */
+  protected $seemDisplayable;
+
+  /**
    * The layout manager.
    *
    * @var \Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface
@@ -204,6 +211,14 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   /**
    * {@inheritdoc}
    */
+  public function setSeemDisplayable($seem_displayable) {
+    $this->seemDisplayable = $seem_displayable;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function processRegion($region_definition, $region_key, &$build = []) {
     $region = [];
     foreach ($region_definition as $content) {
@@ -323,8 +338,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $query = \Drupal::entityQuery('seem_display');
 
       /** @var \Drupal\seem\Plugin\SeemDisplayableInterface $seem_displayable */
-      $seem_displayable = $this->seemDisplayableManager->createInstance($display['seem_displayable']);
-      $parameters = $seem_displayable->getConfigContext($display['context']);
+//      $seem_displayable = $this->seemDisplayableManager->createInstance($display['seem_displayable']);
+      $parameters = $this->seemDisplayable->getConfigContext($display['context']);
 
       foreach ($parameters as $key => $value) {
         $query->condition("parameters.$key", $value);

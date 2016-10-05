@@ -4,6 +4,7 @@ namespace Drupal\seem\EventSubscriber;
 
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Render\RenderEvents;
+use Drupal\seem\Plugin\SeemDisplayableManager;
 use Drupal\seem\SeemDisplayManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,13 +23,23 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
   protected $seemDisplayPluginManager;
 
   /**
+   * The seem displayable plugin manager.
+   *
+   * @var \Drupal\seem\Plugin\SeemDisplayableManager
+   */
+  protected $seemDisplayableManager;
+
+  /**
    * Constructs a new SeemDisplayVariantSubscriber object.
    *
    * @param \Drupal\seem\SeemDisplayManager $seem_display_plugin_manager
    *   The seem display manager.
+   * @param \Drupal\seem\Plugin\SeemDisplayableManager $seem_displayable_manager
+   *   The seem displayable plugin manager.
    */
-  public function __construct(SeemDisplayManager $seem_display_plugin_manager) {
+  public function __construct(SeemDisplayManager $seem_display_plugin_manager, SeemDisplayableManager $seem_displayable_manager) {
     $this->seemDisplayPluginManager = $seem_display_plugin_manager;
+    $this->seemDisplayableManager = $seem_displayable_manager;
   }
 
   /**
@@ -51,7 +62,8 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
       $configuration['suggestion'] = $event->getRouteMatch()->getParameter('plugin_id');
       $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();
       // @todo: Use seemDisplayable to determine context! (like the seem render element does)
-      $configuration['seem_displayable'] = 'page';
+      $seem_displayable = $this->seemDisplayableManager->createInstance('page');
+      $configuration['seem_displayable'] = $seem_displayable;
       $configuration['seem_display'] = $event->getRouteMatch()->getParameter('seem_display');
 
       $event->setPluginConfiguration($configuration);
@@ -65,7 +77,8 @@ class SeemDisplayVariantSubscriber implements EventSubscriberInterface {
         // @todo: Replace suggestion with file_name or ID?
         $configuration['suggestion'] = $event->getRouteMatch()->getRouteName();
         $configuration['context']['route'] = $event->getRouteMatch()->getRouteName();
-        $configuration['seem_displayable'] = 'existing_page';
+        $seem_displayable = $this->seemDisplayableManager->createInstance('existing_page');
+        $configuration['seem_displayable'] = $seem_displayable;
         $configuration['seem_display'] = $seem_display;
 
         $event->setPluginConfiguration($configuration);

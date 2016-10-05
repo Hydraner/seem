@@ -98,6 +98,7 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
     // Use the display_variant's main content to be able to place it in a custom
     // region via a custom seem display.
     $seem_display->setMainContent($this->getMainContent());
+    $seem_display->setSeemDisplayable($this->getSeemDisplayable());
 
     // Get an instance of the original display variant.
     /** @var \Drupal\Core\Display\PageVariantInterface $page_variant */
@@ -141,6 +142,13 @@ class SeemVariant extends VariantBase implements PageVariantInterface, Container
   public function setTitle($title) {
     $this->title = $title;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSeemDisplayable() {
+    return $this->configuration['seem_displayable'];
   }
 
 }
