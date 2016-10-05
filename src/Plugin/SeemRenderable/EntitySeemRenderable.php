@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\devel_generate\DevelGenerateBase;
 use Drupal\devel_generate\Plugin\DevelGenerate\ContentDevelGenerate;
-use Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface;
+use Drupal\seem\Plugin\SeemDisplayInterface;
 use Drupal\seem\Plugin\SeemRenderableBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -98,7 +98,7 @@ class EntitySeemRenderable extends SeemRenderableBase implements ContainerFactor
    * Do a dummy.
    *
    * @param $content
-   * @param \Drupal\seem\Plugin\SeemDisplay\SeemDisplayInterface $seem_display
+   * @param \Drupal\seem\Plugin\SeemDisplayInterface $seem_display
    * @return array
    */
   public function doDummy($content, SeemDisplayInterface $seem_display) {
