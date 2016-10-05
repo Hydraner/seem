@@ -4,6 +4,7 @@ namespace Drupal\seem\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
+use Drupal\seem\Discovery\YamlRecursiveDirectoryIteratorDiscovery;
 
 /**
  * Enables YAML discovery in directories for plugin definitions.
@@ -39,7 +40,9 @@ class YamlDirectoryDiscoveryDecorator extends YamlDirectoryDiscovery {
    *   Defaults to 'id'.
    */
   public function __construct(DiscoveryInterface $decorated, array $directories, $file_cache_key_suffix, $key = 'id') {
-    parent::__construct($directories, $file_cache_key_suffix, $key);
+    // Intentionally does not call parent constructor as this class uses a
+    // different YAML discovery.
+    $this->discovery = new YamlRecursiveDirectoryIteratorDiscovery($directories, $file_cache_key_suffix, $key);
     $this->decorated = $decorated;
   }
 

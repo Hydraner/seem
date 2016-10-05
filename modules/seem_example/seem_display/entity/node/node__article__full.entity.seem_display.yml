@@ -22,3 +22,9 @@ regions:
       type: view
       name: who_s_new
       display_id: block_1
+    -
+      type: entity
+      entity_type: node
+      view_mode: teaser
+      id: 9999
+      bundle: article

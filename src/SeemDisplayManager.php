@@ -157,6 +157,15 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     $new_definitions = [];
     // Adjust the array_key to match the new plugin id.
     foreach ($definitions as $old_plugin_id => $definition) {
+      // Make sure that the id is unique.
+      if (isset($new_definitions[$definition['id']])) {
+        throw new PluginException(sprintf(
+          '"%s" (defined in %s) was previously defined in %s.',
+          $definition['id'],
+          $definition['_discovered_file_path'],
+          $new_definitions[$definition['id']]['_discovered_file_path']
+        ));
+      }
       $new_definitions[$definition['id']] = $definition;
     }
     $definitions = $new_definitions;
@@ -170,14 +179,14 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    // @todo: Find a better way to do this. Maybe the seem_displayable should know this.
     if (isset($definition['_discovered_file_path'])) {
+      // Get information out of the basename.
       $basename = basename($definition['_discovered_file_path']);
       $basename_fragments = explode('.seem_display.yml', $basename);
-      $basename_fragments = explode('.', $basename_fragments[0]);
-      $count = count($basename_fragments);
-      $definition['seem_displayable'] = $basename_fragments[$count - 1];
-      $basename_fragments = explode('.' . $basename_fragments[$count - 1] . '.seem_display.yml', $basename);
+      $display_name_fragments = explode('.', $basename_fragments[0]);
+      // The seem_displayble is always the last fragment of the name.
+      $definition['seem_displayable'] = end($display_name_fragments);
+      // Use the display's name as the id for the display.
       $definition['id'] = $basename_fragments[0];
     }
 
@@ -190,10 +199,13 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
       $definition['context']['route'] = "seem.display_" . $definition['id'];
     }
 
-    // @todo: Get context dependencies from seem_displayable.
-    // @todo: Add the possibility to validate the id per seem_displayable.
+    // Validate if the seem displayable exists.
     if (!$this->seemDisplayablePluginManager->hasDefinition($definition['seem_displayable'])) {
-      throw new PluginException(sprintf('Seem Displayable "%s" does not exist (defined in %s).', $definition['seem_displayable'], $definition['_discovered_file_path']));
+      throw new PluginException(sprintf(
+        'Seem Displayable "%s" does not exist (defined in %s).',
+        $definition['seem_displayable'],
+        $definition['_discovered_file_path']
+      ));
     }
   }
 
@@ -304,29 +316,5 @@ class SeemDisplayManager extends DefaultPluginManager implements SeemDisplayMana
     $this->cacheSet($this->cacheKeyBySeemDisplayable, $definitions_by_seem_displayable, Cache::PERMANENT, $this->cacheTags);
     $this->definitionsBySeemDisplayable = $definitions_by_seem_displayable;
   }
-
-//  function searchArray($array, $key, $value) {
-//    $results = array();
-//
-//    if (is_array($array)) {
-//      if (isset($array[$key]) && $array[$key] == $value) {
-//        $results[] = $array;
-//      }
-//
-//      foreach ($array as $subarray) {
-//        $results = array_merge($results, $this->searchArray($subarray, $key, $value));
-//      }
-//    }
-//
-//    return $results;
-//  }
-//
-//  public function getRenderableDisplayDefinitions() {
-//    $definitions = $this->searchArray($this->getDefinitions(), 'type', 'display');
-//
-//    $debug = 1;
-////    return $this->getDefinitions();
-//    return $definitions;
-//  }
 
 }
