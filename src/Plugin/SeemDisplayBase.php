@@ -263,6 +263,11 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $default_settings = isset($layout->pluginDefinition['settings']) ? $layout->pluginDefinition['settings'] : [];
       $layout->setConfiguration(array_merge($default_settings, $configuration));
 
+      // Add the support for an undefined number of regions in layouts.
+      if (isset($layout->pluginDefinition['regions']['sequence'])) {
+        $regions['sequence'] = $regions;
+      }
+
       return $layout->build($regions);
     }
     else {
