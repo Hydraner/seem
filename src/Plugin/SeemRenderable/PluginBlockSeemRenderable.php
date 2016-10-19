@@ -48,7 +48,13 @@ class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerF
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockManager $block_manager, AccountInterface $current_user) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    BlockManager $block_manager,
+    AccountInterface $current_user
+  ) {
     $this->blockManager = $block_manager;
     $this->currentUser = $current_user;
 
@@ -58,7 +64,12 @@ class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerF
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
@@ -72,7 +83,7 @@ class PluginBlockSeemRenderable extends SeemRenderableBase implements ContainerF
    * {@inheritdoc}
    */
   public function doRenderable($content, SeemDisplayInterface $seem_display) {
-    $config = isset($content['settings']) ? $content['settings'] : [];
+    $config = isset($content['layout_settings']) ? $content['layout_settings'] : [];
     $plugin_block = $this->blockManager->createInstance($content['plugin_id'], $config);
     if ($plugin_block instanceof AccessInterface) {
       // Some blocks might implement access check.
