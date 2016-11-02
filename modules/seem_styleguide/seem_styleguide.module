@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations and functions for the seem styleguide module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function seem_styleguide_theme() {
+  return array(
+    'generated_styleguide' => array(
+      'variables' => array('content' => NULL)
+    ),
+  );
+}

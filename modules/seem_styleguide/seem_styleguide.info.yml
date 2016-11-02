@@ -1,0 +1,7 @@
+name: Seem styleguide
+type: module
+description: ''
+core: 8.x
+package: Seem
+dependencies:
+  - seem

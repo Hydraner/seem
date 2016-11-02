@@ -1,0 +1,5 @@
+services:
+  seem_styleguide.twig.seemDisplayTwigExtension:
+    class: Drupal\seem_stylguide\SeemStyleguideDisplayTwigExtension
+    tags:
+      - { name: twig.extension }
