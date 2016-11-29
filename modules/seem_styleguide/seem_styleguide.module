@@ -13,5 +13,8 @@ function seem_styleguide_theme() {
     'generated_styleguide' => array(
       'variables' => array('content' => NULL)
     ),
+    'generated_documentation' => array(
+      'variables' => array('content' => NULL)
+    ),
   );
 }

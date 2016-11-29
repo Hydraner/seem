@@ -19,7 +19,7 @@ class StyleguideSeemRenderable extends SeemRenderableBase {
    * {@inheritdoc}
    */
   public function doRenderable($content, SeemDisplayInterface $seem_display) {
-    return ['#theme' => 'generated_styleguide'];
+    return ['#theme' => ($content['format'] == 'styleguide') ? 'generated_styleguide' : 'generated_documentation'];
   }
 
 }

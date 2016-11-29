@@ -1,0 +1,8 @@
+label: "Documentation"
+context:
+  path: '/seem/documentation'
+regions:
+  content:
+    -
+      type: styleguide
+      format: documentation
