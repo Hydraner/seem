@@ -42,7 +42,6 @@ of Bartik:
 cd path/to/drupalroot
 mkdir -p themes/bartikseem
 cd themes/bartikseem
-vim bartikseem.info.yml
 ```
 
 Within the themes/bartikseem directory, create the following
@@ -55,8 +54,8 @@ description: This is a sub theme of Bartik
 core: 8.x
 base theme: bartik
 ```
-You can now browse to 'admin/appearance', look for 'bartikseem' and click
-'enable and set as default'.
+You can now browse to 'admin/appearance', look for 'Bartikseem' and click
+'Install and set as default'.
 
 Please make sure that your Bartikseem sub-theme is enabled and active, otherwise
 the rest of this tutorial will not work. You can confirm this by browsing to
@@ -64,7 +63,8 @@ the rest of this tutorial will not work. You can confirm this by browsing to
 
 Now that we have a sub-theme, we can demonstrate how Seem works.
 
-In this example, we will use Seem to alter the rendering of a node of type page.
+In this example, we will use Seem to alter the rendering of a node of type
+```page```.
 
 So, if you don't have one already, go to 'node/add/page', and create a page
 node.
@@ -74,14 +74,16 @@ Within your Bartikseem sub-theme, create a ```seem_display``` directory.
 ```
 cd path/to/drupalroot
 mkdir -p themes/bartikseem/seem_display
-vim seem_example.entity.seem_display.yml
 ```
+
+In the ```seem_display``` directory, create a file named
+```seem_example.entity.seem_display.yml```.
 
 The file naming convention is as follows:
 
 - seem_example - this is an arbitrary string, it can be whatever you like.
 - entity - this is the displayable plugin type - in our case, it means that we
-are about to alter the rendering of an entity.
+are about to alter the rendering of an entity (a page node, to be precise).
 - seem_display.yml - this tells Drupal that we are about to define a
 seem_display plugin.
 
@@ -101,7 +103,7 @@ regions:
       display_id: block_1
     -
       type: markup
-      markup: '<h1>Hello world</h1>'
+      markup: '<h1>This is some custom markup</h1>'
     -
       type: main_content
 ```
@@ -164,7 +166,8 @@ the layout_plugin module.
 
 For seem, layout_plugin is a dependency, so it will already be enabled.
 
-So that we can use the layout_example_2col layout, enable layout_plugin_example:
+So that we can use the layout_example_2col layout, let's enable the
+```layout_plugin_example``` module:
 
 ```
 drush en layout_plugin_example
@@ -172,9 +175,9 @@ drush en layout_plugin_example
 
 Now, we can inject our content into a layout.
 
-Edit ```seem_display.yml``` as follows:
-
-Add the layout, and add the left and right regions.
+Edit ```themes/bartikseem/seem_display/seem_example.entity.seem_display.yml```
+as follows, adding the ```layout_example_2col``` layout with ```left``` and
+```right``` ```regions```:
 
 ```
 label: 'Seem example'
@@ -209,6 +212,6 @@ layout.
 ![basic seem example using layout](seem-readme-2.png)
 
 # Additional notes
-In order to be able to use the seem active config, you need to make sure, this
-patch is applyes to your drupal core: 
+In order to be able to use the seem active config, you need to make sure that
+the following patch is applied to your drupal core:
 https://www.drupal.org/files/issues/core-contextual-ajax-2764931-7.patch
