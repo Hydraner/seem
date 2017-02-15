@@ -14,7 +14,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_entity_view_alter().
  *
- * Wraps any entity with the seem render element to make it displaybale.
+ * Wraps any entity with the seem render element to make it displayable.
  */
 function seem_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   $main_content = $build;
@@ -33,7 +33,7 @@ function seem_entity_view_alter(array &$build, EntityInterface $entity, EntityVi
 }
 
 /**
- * Implements hook_entity_view_alter().
+ * Implements hook_form_alter().
  *
  * Add a post_render callback to any form, in order to wrap the rendered form
  * with a layout.
@@ -45,17 +45,17 @@ function seem_form_alter(&$form, $form_state) {
 /**
  * Implementation of seem_post_render().
  *
- * Wrap the rendered form with the seem render element to make it displaybale.
+ * Wrap the rendered form with the seem render element to make it displayable.
  *
  * @param string $markup
- *    The markup passed by post_render. We use it as main_content.
+ *   The markup passed by post_render. We use it as main_content.
  * @param array $element
- *    The original render array to extract some context.
+ *   The original render array to extract some context.
  *
  * @return string
- *    Returns the rendered layout / new markup.
+ *   Returns the rendered layout / new markup.
  */
-function seem_post_render($markup, $element) {
+function seem_post_render($markup, array $element) {
   $output = array(
     '#type' => 'seem',
     '#displayable' => 'form',
@@ -151,7 +151,7 @@ function seem_contextual_links_view_alter(&$element, $items) {
       'width' => 700,
       'parameters' => $items['seem.display_config']['metadata']['parameters'],
       'context' => $items['seem.display_config']['metadata']['context'],
-      'plugin_id' => $items['seem.display_config']['metadata']['plugin_id']
+      'plugin_id' => $items['seem.display_config']['metadata']['plugin_id'],
     ]);
     // Rebuild the link.
     $route_name = $items['seem.display_config']['metadata']['route'];
