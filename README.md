@@ -76,8 +76,7 @@ cd path/to/drupalroot
 mkdir -p themes/bartikseem/seem_display
 ```
 
-In the ```seem_display``` directory, create a file named
-```seem_example.entity.seem_display.yml```.
+In the ```seem_display``` directory, create a file named ```seem_example.entity.seem_display.yml```.
 
 The file naming convention is as follows:
 
