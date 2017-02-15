@@ -64,7 +64,7 @@ the rest of this tutorial will not work. You can confirm this by browsing to
 Now that we have a sub-theme, we can demonstrate how Seem works.
 
 In this example, we will use Seem to alter the rendering of a node of type
-```page```.
+'page'.
 
 So, if you don't have one already, go to 'node/add/page', and create a page
 node.
