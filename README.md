@@ -193,7 +193,7 @@ regions:
       display_id: block_1
     -
       type: markup
-      markup: '<h1>Hello world</h1>'
+      markup: '<h1>This is some custom markup</h1>'
   right:
     -
       type: main_content
