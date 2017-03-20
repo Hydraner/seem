@@ -21,6 +21,7 @@ function seem_entity_view_alter(array &$build, EntityInterface $entity, EntityVi
   $build = array(
     '#' . $entity->getEntityTypeId() => $entity,
     '#entity_type' => $entity->getEntityTypeId(),
+    '#view_mode' => $display->getMode(),
     'content' => array(
       '#type' => 'seem',
       '#displayable' => 'entity',
@@ -159,3 +160,4 @@ function seem_contextual_links_view_alter(&$element, $items) {
     $element['#links']['seemdisplay-config']['url'] = Url::fromRoute($route_name, $route_parameters, []);
   }
 }
+
