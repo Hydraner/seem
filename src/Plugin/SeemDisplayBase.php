@@ -5,10 +5,10 @@ namespace Drupal\seem\Plugin;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -66,11 +66,11 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
   protected $seemDisplayable;
 
   /**
-   * The layout manager.
+   * The layout plugin manager.
    *
-   * @var \Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface
+   * @var \Drupal\Core\Layout\LayoutPluginManagerInterface
    */
-  protected $layoutManager;
+  protected $layoutPluginManager;
 
   /**
    * Constructs a new Seem object.
@@ -85,8 +85,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    *   The seem renderable plugin manager.
    * @param \Drupal\seem\Plugin\SeemDisplayableManager $seem_displayable_manager
    *   The seem displayable plugin manager.
-   * @param \Drupal\layout_plugin\Plugin\Layout\LayoutPluginManagerInterface $layout_manager
-   *   Layout manager.
+   * @param \Drupal\Core\Layout\LayoutPluginManagerInterface $layout_plugin_manager
+   *   The layout plugin manager.
    */
   public function __construct(
     array $configuration,
@@ -94,11 +94,11 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
     $plugin_definition,
     SeemRenderableManager $seem_renderable_manager,
     SeemDisplayableManager $seem_displayable_manager,
-    LayoutPluginManagerInterface $layout_manager
+    LayoutPluginManagerInterface $layout_plugin_manager
   ) {
     $this->seemRenderableManager = $seem_renderable_manager;
     $this->seemDisplayableManager = $seem_displayable_manager;
-    $this->layoutManager = $layout_manager;
+    $this->layoutPluginManager = $layout_plugin_manager;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->layout = isset($this->pluginDefinition['layout']) ? $this->pluginDefinition['layout'] : $this->layout;
@@ -120,7 +120,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
       $plugin_definition,
       $container->get('plugin.manager.seem_renderable.processor'),
       $container->get('plugin.manager.seem_displayable.processor'),
-      $container->get('plugin.manager.layout_plugin')
+      $container->get('plugin.manager.core.layout')
     );
   }
 
@@ -256,8 +256,8 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
    * {@inheritdoc}
    */
   public function processLayout($regions, $layout, $configuration = []) {
-    if ($this->layoutManager->hasDefinition($layout)) {
-      $layout = $this->layoutManager->createInstance($layout, []);
+    if ($this->layoutPluginManager->hasDefinition($layout)) {
+      $layout = $this->layoutPluginManager->createInstance($layout, []);
 
       // Add support for default settings in layouts.
       $default_settings = isset($layout->pluginDefinition['settings']) ? $layout->pluginDefinition['settings'] : [];
@@ -377,7 +377,7 @@ abstract class SeemDisplayBase extends PluginBase implements SeemDisplayInterfac
         ),
       );
 
-      $layout = $this->layoutManager->createInstance('seem_wrapper', []);
+      $layout = $this->layoutPluginManager->createInstance('seem_wrapper', []);
       $build = $layout->build($build);
     }
   }

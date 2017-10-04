@@ -6,4 +6,4 @@ project: seem
 version: VERSION
 package: Seem
 dependencies:
-  - layout_plugin
+  - layout_discovery

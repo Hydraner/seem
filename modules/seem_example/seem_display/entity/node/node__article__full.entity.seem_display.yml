@@ -2,19 +2,19 @@
 # Plugin property $defaults are defined in SeemLayoutPluginManager.
 label: 'One2'
 class: '\Drupal\seem_example\Plugin\SeemDisplay\SeemDisplayNodeArticleFullDisplay'
-layout: 'layout_example_2col'
+layout: 'layout_twocol'
 context:
   entity_type: 'node'
   bundle: 'article'
   view_mode: 'default'
 regions:
-  left:
+  first:
     -
       type: main_content
     -
       type: markup
       markup: "Hier kann ich jetzt direkt markup definieren, ist vielleicht nicht so schön aber es ist ja auch nur eine DEMO."
-  right:
+  second:
     -
       type: content_block
       bid: 1
