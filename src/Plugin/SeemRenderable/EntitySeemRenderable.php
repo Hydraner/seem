@@ -100,33 +100,37 @@ class EntitySeemRenderable extends SeemRenderableBase implements ContainerFactor
    * @param $content
    * @param \Drupal\seem\Plugin\SeemDisplayInterface $seem_display
    * @return array
+   *
+   * Update this for 5.x https://www.drupal.org/node/2909464
    */
   public function doDummy($content, SeemDisplayInterface $seem_display) {
-    $entity_type = $content['entity_type'];
-    $entity_id = $content['id'];
-    $view_mode = $content['view_mode'];
+    if (\Drupal::moduleHandler()->moduleExists('devel_generate')) {
+      $entity_type = $content['entity_type'];
+      $entity_id = $content['id'];
+      $view_mode = $content['view_mode'];
 
-    /** @var \Drupal\Component\Uuid\Php $uuid */
-    $uuid = \Drupal::service('uuid');
-    $entity = \Drupal::entityTypeManager()->getStorage($entity_type)
-      ->create([
-        'nid' => $entity_id,
-        'type' => 'article',
-        'created' => time(),
-        'changed' => time(),
-        'revision_timestamp' => time(),
+      /** @var \Drupal\Component\Uuid\Php $uuid */
+      $uuid = \Drupal::service('uuid');
+      $entity = \Drupal::entityTypeManager()->getStorage($entity_type)
+        ->create([
+          'nid' => $entity_id,
+          'type' => 'article',
+          'created' => time(),
+          'changed' => time(),
+          'revision_timestamp' => time(),
+        ]);
+      $entity->in_preview = TRUE;
+      $controller = new EntityViewController(
+        \Drupal::getContainer()->get('entity.manager'),
+        \Drupal::getContainer()->get('renderer')
+      );
+      ContentDevelGenerate::populateFields($entity, [
+        'created',
+        'changed',
+        'revision_timestamp',
       ]);
-    $entity->in_preview = TRUE;
-    $controller = new EntityViewController(
-      \Drupal::getContainer()->get('entity.manager'),
-      \Drupal::getContainer()->get('renderer')
-    );
-    ContentDevelGenerate::populateFields($entity, [
-      'created',
-      'changed',
-      'revision_timestamp',
-    ]);
-    return $controller->view($entity, $view_mode);
+      return $controller->view($entity, $view_mode);
+    }
   }
 
 }
