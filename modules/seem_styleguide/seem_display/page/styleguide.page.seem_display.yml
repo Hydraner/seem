@@ -1,8 +1,0 @@
-label: "Styleguide"
-context:
-  path: '/seem/styleguide'
-regions:
-  content:
-    -
-      type: styleguide
-      format: styleguide
